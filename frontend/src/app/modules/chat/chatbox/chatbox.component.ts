@@ -15,7 +15,12 @@ export type Message = {
 export class ChatboxComponent {
   messages: Message[] = [];
 
-  handleMessage(event: Message) {
-    this.messages.push(event);
+  handleMessage(messageText: string) {
+    const message: Message = {
+      text: messageText,
+      sender: 'User',
+      isUser: true
+    };
+    this.messages.push(message);
   }
 }
