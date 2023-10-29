@@ -18,4 +18,14 @@ describe('ChatboxComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it("Should handle messages.", () =>{
+    const testMessage = {text: "Test message", sender: "Test sender"};
+    component.handleMessage(testMessage);
+    expect(component.messages).toContain(testMessage);
+    
+    const testMessage2 = {text: "Test message 2", sender: "Test sender 2"}
+    component.handleMessage(testMessage2);
+    expect(component.messages).toContain(testMessage2);
+  })
 });
