@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 
 
-type Message = {
+export type Message = {
   text: string;
   sender: string;
+  isUser: boolean;
 }
 
 @Component({

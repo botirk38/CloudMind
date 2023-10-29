@@ -20,11 +20,11 @@ describe('ChatboxComponent', () => {
   });
 
   it("Should handle messages.", () =>{
-    const testMessage = {text: "Test message", sender: "Test sender"};
+    const testMessage = {text: "Test message", sender: "Test sender", isUser: true};
     component.handleMessage(testMessage);
     expect(component.messages).toContain(testMessage);
     
-    const testMessage2 = {text: "Test message 2", sender: "Test sender 2"}
+    const testMessage2 = {text: "Test message 2", sender: "Test sender 2", isUser: false}
     component.handleMessage(testMessage2);
     expect(component.messages).toContain(testMessage2);
   })
