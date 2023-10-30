@@ -49,4 +49,12 @@ export class PdfService {
       reader.readAsArrayBuffer(file);
     });
   }
+
+  sendToBackend(text: string): Observable<any>{
+    // Need to update but similar structure
+    const url = "http://localhost:5000/api/pdf";
+    return this.http.post(url, {text: text})
+   
+  }
+
 }
