@@ -22,7 +22,7 @@ describe('PdfService', () => {
   it("should extract content from pdf.", (done: DoneFn) => {
     const testFile = new File([""], "test.pdf", {type: "application/pdf"});
 
-    service.extractContent(testFile).subscribe((data) => {
+    service.extractPdfContent(testFile).subscribe((data) => {
       expect(data).toBeTruthy();
       expect(data).toEqual("Test content");
       done();
@@ -35,7 +35,7 @@ describe('PdfService', () => {
   it("should return error if file is not pdf.", (done: DoneFn) => {
     const testFile = new File([""], "test.txt", {type: "text/plain"});
 
-    service.extractContent(testFile).subscribe((data) => {
+    service.extractPdfContent(testFile).subscribe((data) => {
       expect(data).toBeFalsy();
       done();
     });
@@ -44,4 +44,7 @@ describe('PdfService', () => {
 
   });
 
+  
+  
 });
+    
