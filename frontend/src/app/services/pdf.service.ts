@@ -3,13 +3,14 @@ import { HttpClient } from '@angular/common/http';
 import * as pdfjsLib from 'pdfjs-dist';
 import { Observable } from 'rxjs';
 import { TextItem } from 'pdfjs-dist/types/src/display/api';
+import { PdfwrapperService } from './pdfwrapper.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PdfService {
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private pdfWrapper: PdfwrapperService) {
     pdfjsLib.GlobalWorkerOptions.workerSrc = '//mozilla.github.io/pdf.js/build/pdf.worker.mjs';
   }
 
@@ -19,7 +20,7 @@ export class PdfService {
       reader.onload = async (event) => {
         try {
           const typedArray = new Uint8Array(event.target?.result as ArrayBuffer);
-          const pdf = await pdfjsLib.getDocument(typedArray).promise;
+          const pdf = await this.pdfWrapper.getDocument(typedArray).promise;
           let rawText = "";
 
           for (let i = 1; i <= pdf.numPages; i++) {
