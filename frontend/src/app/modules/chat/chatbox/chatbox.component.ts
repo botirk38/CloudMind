@@ -14,6 +14,7 @@ export type Message = {
 })
 export class ChatboxComponent {
   messages: Message[] = [];
+  isTyping = false;
 
   handleMessage(messageText: string) {
     const message: Message = {
@@ -22,5 +23,11 @@ export class ChatboxComponent {
       isUser: true
     };
     this.messages.push(message);
+    this.isTyping = false;
   }
+
+  handleIsTyping(isTyping: boolean){
+    this.isTyping = isTyping;
+  }
+  
 }
