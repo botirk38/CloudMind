@@ -9,6 +9,7 @@ import { MessageComponent } from './modules/chat/message/message.component';
 import { FormsModule } from '@angular/forms';
 import { PdfComponent } from './modules/pdf/pdf.component';
 import { SendBtnComponent } from './components/buttons/send-btn/send-btn.component';
+import { FileUploadModule } from 'primeng/fileupload';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { SendBtnComponent } from './components/buttons/send-btn/send-btn.compone
   imports: [
     BrowserModule,
     AppRoutingModule,
-    FormsModule
+    FormsModule,
+    FileUploadModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

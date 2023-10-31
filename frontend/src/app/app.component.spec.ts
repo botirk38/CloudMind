@@ -5,14 +5,18 @@ import { ChatboxComponent } from './modules/chat/chatbox/chatbox.component';
 import { InputboxComponent } from './modules/chat/inputbox/inputbox.component';
 import { FormsModule } from '@angular/forms';
 import { SendBtnComponent } from './components/buttons/send-btn/send-btn.component';
+import { PdfComponent } from './modules/pdf/pdf.component';
+import { HttpClientModule } from '@angular/common/http';
+import { FileUploadModule } from 'primeng/fileupload';
 
 describe('AppComponent', () => {
   beforeEach(() => TestBed.configureTestingModule({
-    imports: [RouterTestingModule, FormsModule],
+    imports: [RouterTestingModule, FormsModule, HttpClientModule, FileUploadModule],
     declarations: [AppComponent,
       ChatboxComponent,
       InputboxComponent,
       SendBtnComponent,
+      PdfComponent,
 
     ]
   }));
