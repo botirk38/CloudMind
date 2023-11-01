@@ -1,0 +1,14 @@
+<p-fileUpload
+    name="demo[]"
+    url="https://www.primefaces.org/cdn/api/upload.php"
+    (onUpload)="handleFileInput($event.files[0])" 
+    [multiple]="false"
+    accept="application/pdf"
+    [maxFileSize]="1000000"
+>
+    <ng-template pTemplate="content">
+        <ul *ngIf="fileToUpload">
+            <li>{{ fileToUpload.name }} - {{ fileToUpload.size }} bytes</li>
+        </ul>
+    </ng-template>
+</p-fileUpload>

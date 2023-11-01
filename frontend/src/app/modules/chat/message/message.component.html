@@ -1,4 +1,12 @@
 <div *ngIf="message" class="message" [ngClass]="{'user-message': message.isUser, 'bot-message': !message.isUser}">
+<<<<<<< HEAD
     {{message.text}}
+=======
+    <picture>
+        <img *ngIf="message.isUser" src="assets/images/user_icon.png" alt ="User Avatar"/>
+        <img *ngIf="!message.isUser" src="" alt ="Bot Avatar"/>
+    </picture>
+        {{message.text}}
+>>>>>>> b3585f26abb254068f9ccd031428528366f58a2b
 </div>
 
