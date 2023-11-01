@@ -1,4 +1,6 @@
 import { Component, EventEmitter, Output } from '@angular/core';
+import { Subject } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
 
 @Component({
   selector: 'app-inputbox',
@@ -7,14 +9,27 @@ import { Component, EventEmitter, Output } from '@angular/core';
 })
 export class InputboxComponent {
   @Output() messageEvent = new EventEmitter<string>();
+  @Output() typingEvent = new EventEmitter<boolean>();
 
-  userInput: string  = "";
+  userInput: string = "";
+  typing = new Subject<string>();
 
-  sendMessage() {
-    this.messageEvent.emit(this.userInput);
-    this.userInput = "";
+  constructor() {
+    this.typing.pipe(
+      debounceTime(200)
+    ).subscribe((value) => {
+      this.typingEvent.emit(!!value);
+    });
   }
 
+  sendMessage() {
+    this.messageEvent.emit(this.userInput.trim());
+    this.userInput = "";
+    this.typing.next(""); 
+    
+  }
 
-
+  onTyping() {
+    this.typing.next(this.userInput);
+  }
 }
