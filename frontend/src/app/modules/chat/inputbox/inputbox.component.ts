@@ -6,12 +6,12 @@ import { Component, EventEmitter, Output } from '@angular/core';
   styleUrls: ['./inputbox.component.css']
 })
 export class InputboxComponent {
-  @Output() messageEvent = new EventEmitter<string>();
+  @Output() messageSent = new EventEmitter<string>();
 
   userInput: string  = "";
 
   sendMessage() {
-    this.messageEvent.emit(this.userInput);
+    this.messageSent.emit(this.userInput);
     this.userInput = "";
   }
 

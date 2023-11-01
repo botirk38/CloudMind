@@ -20,10 +20,10 @@ describe('InputboxComponent', () => {
   });
 
   it('Should emit message and clear input on send.', () => {
-    spyOn(component.messageEvent, 'emit');
+    spyOn(component.messageSent, 'emit');
     component.userInput = "Test Input";
     component.sendMessage();
-    expect(component.messageEvent.emit).toHaveBeenCalledWith("Test Input");
+    expect(component.messageSent.emit).toHaveBeenCalledWith("Test Input");
     expect(component.userInput).toBe("");
 
   })

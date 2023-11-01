@@ -1,4 +1,4 @@
-<div *ngIf="message" class="message" [ngClass]="{'user-message': message?.isUser, 'bot-message': !message?.isUser}">
+<div *ngIf="message" class="message" [ngClass]="{'user-message': message.isUser, 'bot-message': !message.isUser}">
     {{message.text}}
 </div>
 
