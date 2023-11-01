@@ -8,6 +8,7 @@ import { SendBtnComponent } from './components/buttons/send-btn/send-btn.compone
 import { PdfComponent } from './modules/pdf/pdf.component';
 import { HttpClientModule } from '@angular/common/http';
 import { FileUploadModule } from 'primeng/fileupload';
+import { MobileNavComponent } from './modules/home/nav/mobile-nav/mobile-nav.component';
 
 describe('AppComponent', () => {
   beforeEach(() => TestBed.configureTestingModule({
@@ -17,6 +18,7 @@ describe('AppComponent', () => {
       InputboxComponent,
       SendBtnComponent,
       PdfComponent,
+      MobileNavComponent
 
     ]
   }));

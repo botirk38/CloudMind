@@ -1,9 +1,10 @@
-<nav class="mobile-nav">
-    <i class="pi pi-bars" (click) = "toggleMenu()" [ngClass] = "{'menu-open': menuOpen}"></i>
+<!-- Updated mobile-nav.component.html -->
+<nav class="mobile-nav" [ngClass]="{'menu-open': menuOpen}">
+    <i class="pi pi-bars" (click)="toggleMenu()"></i>
 
-    <section class="dropdown" [ngClass] = "{'dropdown-open': menuOpen}">
+    <section class="dropdown">
         <picture>
-            <img src="assets/images/logo/logo.png" alt="Logo">
+            <img src="assets/images/logo.jpeg" alt="Logo">
         </picture>
 
         <ul class="dropdown-items">
@@ -13,21 +14,17 @@
             <li class="dropdown-item">
                 <a>Features</a>
             </li>
-
             <li class="dropdown-item">
                 <a>Use Cases</a>
             </li>
-
             <li class="dropdown-item">
                 <a>Prices</a>
             </li>
-
             <li class="dropdown-item">
                 <a>FAQ</a>
             </li>
         </ul>
 
-        <p-button label="Primary"></p-button>
-
+        <p-button label="Try ChatToPDF Now!"></p-button>
     </section>
 </nav>

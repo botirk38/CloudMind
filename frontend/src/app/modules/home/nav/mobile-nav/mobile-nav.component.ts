@@ -6,5 +6,11 @@ import { Component } from '@angular/core';
   styleUrls: ['./mobile-nav.component.css']
 })
 export class MobileNavComponent {
+  menuOpen = false;
+
+  toggleMenu() {
+    this.menuOpen = !this.menuOpen;
+  }
+
 
 }
