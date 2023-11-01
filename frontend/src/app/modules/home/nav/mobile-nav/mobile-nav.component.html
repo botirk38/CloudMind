@@ -1,0 +1,33 @@
+<nav class="mobile-nav">
+    <i class="pi pi-bars" (click) = "toggleMenu()" [ngClass] = "{'menu-open': menuOpen}"></i>
+
+    <section class="dropdown" [ngClass] = "{'dropdown-open': menuOpen}">
+        <picture>
+            <img src="assets/images/logo/logo.png" alt="Logo">
+        </picture>
+
+        <ul class="dropdown-items">
+            <li class="dropdown-item">
+                <a>Try it</a>
+            </li>
+            <li class="dropdown-item">
+                <a>Features</a>
+            </li>
+
+            <li class="dropdown-item">
+                <a>Use Cases</a>
+            </li>
+
+            <li class="dropdown-item">
+                <a>Prices</a>
+            </li>
+
+            <li class="dropdown-item">
+                <a>FAQ</a>
+            </li>
+        </ul>
+
+        <p-button label="Primary"></p-button>
+
+    </section>
+</nav>

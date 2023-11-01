@@ -10,6 +10,7 @@ import { FormsModule } from '@angular/forms';
 import { PdfComponent } from './modules/pdf/pdf.component';
 import { SendBtnComponent } from './components/buttons/send-btn/send-btn.component';
 import { FileUploadModule } from 'primeng/fileupload';
+import { MobileNavComponent } from './modules/home/nav/mobile-nav/mobile-nav.component';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import { FileUploadModule } from 'primeng/fileupload';
     MessageComponent,
     PdfComponent,
     SendBtnComponent,
-    SendBtnComponent
+    SendBtnComponent,
+    MobileNavComponent
 
   ],
   imports: [
