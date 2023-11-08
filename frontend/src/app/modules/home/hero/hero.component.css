@@ -1,0 +1,16 @@
+
+._hero{
+    padding: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+._hero_button_container{
+    margin-bottom: 2rem;
+    align-self: flex-start;
+}
+
+

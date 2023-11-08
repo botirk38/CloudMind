@@ -2,11 +2,15 @@
     position: relative;
     display: flex;
     width: 100%;
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex-end;
-    padding: 0 1rem;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 1rem;
     z-index: 1;
+  }
+
+  i{
+    margin-top: 0;
   }
   
   .pi-bars {
@@ -25,9 +29,10 @@
   }
   
   .dropdown {
+    position: absolute;
     display: flex;
     flex-direction: column;
-    justify-content: start;
+    justify-content: flex-start;
     align-items: center;
     background-color: white;
     border-radius: 0.5em;
@@ -44,7 +49,7 @@
   .menu-open .dropdown {
     position: absolute;
     top: 100%;
-    right: 20%;
+    right: 0;
     min-width: 95vw;
     z-index: 1;
     opacity: 1;
@@ -53,11 +58,17 @@
     transition-delay: 0s; 
   }
 
-  picture{
+  ._dropdown-logo{
     width: 60%;
     height: 60%;
     object-fit: cover;
   }
+
+  .logo{
+    width:30%;
+    height:30%;
+  }
+
 
   picture > img{
     width: 100%;

@@ -1,9 +1,14 @@
 <!-- Updated mobile-nav.component.html -->
 <nav class="mobile-nav" [ngClass]="{'menu-open': menuOpen}">
+
+    <picture class="logo">
+        <img src="assets/images/logo.jpeg" alt="Logo">
+    </picture>
+
     <i class="pi pi-bars" (click)="toggleMenu()"></i>
 
     <section class="dropdown">
-        <picture>
+        <picture class="_dropdown-logo">
             <img src="assets/images/logo.jpeg" alt="Logo">
         </picture>
 

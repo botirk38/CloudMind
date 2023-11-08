@@ -7,4 +7,11 @@ import { Component } from '@angular/core';
 })
 export class HeroComponent {
 
+  loading = false;
+
+  goToSignup(){
+    this.loading = true;
+  }
+
+
 }
