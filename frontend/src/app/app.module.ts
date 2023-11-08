@@ -11,6 +11,7 @@ import { PdfComponent } from './modules/pdf/pdf.component';
 import { SendBtnComponent } from './components/buttons/send-btn/send-btn.component';
 import { FileUploadModule } from 'primeng/fileupload';
 import { MobileNavComponent } from './modules/home/nav/mobile-nav/mobile-nav.component';
+import { HeroComponent } from './modules/home/hero/hero.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,8 @@ import { MobileNavComponent } from './modules/home/nav/mobile-nav/mobile-nav.com
     PdfComponent,
     SendBtnComponent,
     SendBtnComponent,
-    MobileNavComponent
+    MobileNavComponent,
+    HeroComponent
 
   ],
   imports: [
