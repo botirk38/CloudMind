@@ -8,12 +8,8 @@ import { debounceTime } from 'rxjs/operators';
   styleUrls: ['./inputbox.component.css']
 })
 export class InputboxComponent {
-<<<<<<< HEAD
-  @Output() messageSent = new EventEmitter<string>();
-=======
   @Output() messageEvent = new EventEmitter<string>();
   @Output() typingEvent = new EventEmitter<boolean>();
->>>>>>> b3585f26abb254068f9ccd031428528366f58a2b
 
   userInput: string = "";
   typing = new Subject<string>();
@@ -27,11 +23,7 @@ export class InputboxComponent {
   }
 
   sendMessage() {
-<<<<<<< HEAD
-    this.messageSent.emit(this.userInput);
-=======
     this.messageEvent.emit(this.userInput.trim());
->>>>>>> b3585f26abb254068f9ccd031428528366f58a2b
     this.userInput = "";
     this.typing.next(""); 
     
