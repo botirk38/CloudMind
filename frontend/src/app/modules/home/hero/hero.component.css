@@ -1,6 +1,6 @@
 
 ._hero{
-    padding: 2rem;
+    padding: 1rem;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -11,6 +11,23 @@
 ._hero_button_container{
     margin-bottom: 2rem;
     align-self: flex-start;
+}
+
+span{
+    color: #3B82F6;
+    font-weight: bold;
+
+}
+
+._avatars{
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    min-width: 100%;
+    text-align: center;
+}
+._avatars > p{
+    margin-left:1rem;
 }
 
 

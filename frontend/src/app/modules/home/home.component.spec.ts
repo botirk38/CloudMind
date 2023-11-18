@@ -1,16 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SendBtnComponent } from './send-btn.component';
+import { HomeComponent } from './home.component';
 
-describe('SendBtnComponent', () => {
-  let component: SendBtnComponent;
-  let fixture: ComponentFixture<SendBtnComponent>;
+describe('HomeComponent', () => {
+  let component: HomeComponent;
+  let fixture: ComponentFixture<HomeComponent>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [SendBtnComponent]
+      declarations: [HomeComponent]
     });
-    fixture = TestBed.createComponent(SendBtnComponent);
+    fixture = TestBed.createComponent(HomeComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
