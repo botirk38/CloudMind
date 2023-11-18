@@ -1,11 +1,13 @@
 import { Component, OnDestroy } from '@angular/core';
 import { PdfService } from 'src/app/services/pdf.service';
 import { Subject, switchMap, takeUntil } from 'rxjs';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-pdf',
   templateUrl: './pdf.component.html',
-  styleUrls: ['./pdf.component.css']
+  styleUrls: ['./pdf.component.css'],
+  providers: [MessageService]
 })
 export class PdfComponent implements OnDestroy {
   private unsubscribe$ = new Subject<void>();
@@ -14,7 +16,7 @@ export class PdfComponent implements OnDestroy {
   isLoading = false;
   error = "";
 
-  constructor(private pdfService: PdfService) {}
+  constructor(private pdfService: PdfService, private messageService : MessageService) {}
 
   uploadPDF() {
     if (this.fileToUpload) {
@@ -25,6 +27,7 @@ export class PdfComponent implements OnDestroy {
       ).subscribe({
         next: (response) => {
           console.log(response);
+          this.messageService.add({ severity: 'success', summary: 'Upload Success', detail: 'PDF processed successfully' });
           this.isLoading = false;
         },
         error: (error) => {
@@ -38,6 +41,7 @@ export class PdfComponent implements OnDestroy {
   handleFileInput(file: File) {
     this.fileToUpload = file;
     this.error = "";
+    this.messageService.add({ severity: 'info', summary: 'Success', detail: 'File Uploaded with Auto Mode' });
   }
 
   ngOnDestroy() {

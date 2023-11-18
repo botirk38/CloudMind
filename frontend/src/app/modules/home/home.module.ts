@@ -8,13 +8,18 @@ import { HeroComponent } from './hero/hero.component';
 import { PdfComponent } from './pdf/pdf.component';
 import { FormsModule } from '@angular/forms';
 import { HomeComponent } from './home.component';
+import { SharedModule } from '../shared/shared.module';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {ToastModule} from 'primeng/toast';
+import { BenefitsComponent } from './benefits/benefits.component';
 
 @NgModule({
   declarations: [
     MobileNavComponent,
     HeroComponent,
     PdfComponent,
-    HomeComponent
+    HomeComponent,
+    BenefitsComponent
 
   ],
   imports: [
@@ -22,7 +27,10 @@ import { HomeComponent } from './home.component';
     AvatarGroupModule,
     AvatarModule,
     FileUploadModule,
-    FormsModule
+    FormsModule,
+    SharedModule,
+    BrowserAnimationsModule,
+    ToastModule
   ],
   exports: [
     HomeComponent

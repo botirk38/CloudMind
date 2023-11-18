@@ -1,1 +1,8 @@
-
+._pdf{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-width:100%;
+    gap:11rem;
+}
