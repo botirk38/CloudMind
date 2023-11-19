@@ -1,11 +1,38 @@
 
 ._sections{
     margin-top:3rem;
+
 }
 
 span{
     color: #3B82F6;
     font-weight: bold;
+}
+
+.plans-container{
+    display: flex;
+    justify-content: flex-start;
+    align-items:center;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 2rem;
+    min-width: 100%;
+}
+
+.plans-container > * {
+    width:100%;
+    padding: 1em;
+}
+
+ng-container{
+    width:100%;
+}
+
+
+
+
+.subtext{
+    line-height: 1.5;
 }
 
 p{
