@@ -1,0 +1,12 @@
+@import "primeng/resources/themes/lara-light-blue/theme.css";
+@import "primeng/resources/primeng.css";
+@import "primeicons/primeicons.css";
+
+
+
+app-root{
+    width:100%;
+    height:100%;
+    background-image: linear-gradient(120deg, #a1c4fd 0%, #FFFF 60% , #c2e9fb 100%);
+
+}
