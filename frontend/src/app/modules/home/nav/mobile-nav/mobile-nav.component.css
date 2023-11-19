@@ -1,12 +1,10 @@
 .mobile-nav {
     position: relative;
     display: flex;
-    width: 100%;
     flex-direction: row;
     justify-content: space-between;
     align-items: flex-start;
     padding: 1rem;
-    z-index: 1;
   }
 
   i{
@@ -19,7 +17,7 @@
     cursor: pointer;
     transition: transform 0.3s ease, background-color 0.3s ease;
     background-color: white;
-    padding: 0.5rem;
+    padding: 1rem;
     border-radius: 0.5em;
   }
   

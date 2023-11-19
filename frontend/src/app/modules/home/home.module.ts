@@ -14,6 +14,7 @@ import {ToastModule} from 'primeng/toast';
 import { BenefitsComponent } from './benefits/benefits.component';
 import { Card, CardModule } from 'primeng/card';
 import { PlansComponent } from './plans/plans.component';
+import { TabMenuModule } from 'primeng/tabmenu';
 
 @NgModule({
   declarations: [
@@ -34,7 +35,8 @@ import { PlansComponent } from './plans/plans.component';
     SharedModule,
     BrowserAnimationsModule,
     ToastModule,
-    CardModule
+    CardModule,
+    TabMenuModule
   ],
   exports: [
     HomeComponent

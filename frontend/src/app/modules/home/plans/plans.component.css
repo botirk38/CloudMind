@@ -1,1 +1,21 @@
 
+._sections{
+    margin-top:3rem;
+}
+
+span{
+    color: #3B82F6;
+    font-weight: bold;
+}
+
+p{
+    font-weight:600;
+}
+
+ul{
+    list-style: none;
+    padding: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}

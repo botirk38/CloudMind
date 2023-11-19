@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 
-
 interface UserPlan {
   price: string;
   description: string;
@@ -9,10 +8,12 @@ interface UserPlan {
 }
 
 interface PlanType {
-  student: UserPlan;
-  enterprise: UserPlan;
-  individual: UserPlan;
+  [userType: string]: UserPlan;
 }
+
+type Plans = {
+  [key: string]: PlanType;
+};
 
 @Component({
   selector: 'app-plans',
@@ -23,7 +24,12 @@ export class PlansComponent implements OnInit {
   menuItems: MenuItem[] | undefined;
   activeItem: MenuItem | undefined;
 
-  plans: { monthly: PlanType; yearly: PlanType } = {
+  getObjectKeys(obj: any): string[] {
+    console.log(obj);
+    return obj ? Object.keys(obj) : [];
+  }
+
+  plans: Plans = {
     monthly: {
       student: {
         price: '10/mo',
@@ -60,18 +66,21 @@ export class PlansComponent implements OnInit {
     },
   };
   
-
   ngOnInit(): void {
     this.menuItems = [
       { label: 'Monthly', icon: 'pi pi-calendar', command: () => this.onSelect('monthly') },
       { label: 'Yearly', icon: 'pi pi-calendar', command: () => this.onSelect('yearly') },
     ];
-
     this.activeItem = this.menuItems[0];
+    
   }
 
-  onSelect(plan: string) {
-
+  onSelect(selectedPlan: string): void {
+    this.activeItem = this.menuItems?.find(item => item.label?.toLowerCase() === selectedPlan.toLowerCase());
   }
 
+  getPlanDetails(planTypeKey: string, userType: string): UserPlan  {
+    const plan = this.plans[planTypeKey.toLowerCase()];
+    return plan[userType]
+  }
 }

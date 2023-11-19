@@ -1,6 +1,26 @@
 <section class="_sections">
     <h2>Plans we <span>offer</span></h2>
-    <p>Explore our variety of plans designed to suit your needs. Each plan offers a unique set of features and benefits. Choose the one that fits <span>you best</span>.</p>
-
-    
-</section>
+    <p>
+      Explore our variety of plans designed to suit your needs. Each plan offers a
+      unique set of features and benefits. Choose the one that fits
+      <span>you best</span>.
+    </p>
+  
+    <div *ngIf="activeItem && activeItem.label">
+      <p-tabMenu [model]="menuItems" [activeItem]="activeItem"></p-tabMenu>
+      <ng-container *ngFor="let userType of ['student', 'enterprise', 'individual']">
+        <p-card
+          [header]="userType | titlecase" 
+          [subheader]="getPlanDetails(activeItem.label, userType).price"
+        >
+          <p>{{ getPlanDetails(activeItem.label, userType).description }}</p>
+          <ul>
+            <li *ngFor="let feature of getPlanDetails(activeItem.label, userType)?.features">
+              {{ feature }}
+            </li>
+          </ul>
+        </p-card>
+      </ng-container>
+    </div>
+  </section>
+  
