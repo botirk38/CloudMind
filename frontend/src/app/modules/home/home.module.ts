@@ -12,6 +12,8 @@ import { SharedModule } from '../shared/shared.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {ToastModule} from 'primeng/toast';
 import { BenefitsComponent } from './benefits/benefits.component';
+import { Card, CardModule } from 'primeng/card';
+import { PlansComponent } from './plans/plans.component';
 
 @NgModule({
   declarations: [
@@ -19,7 +21,8 @@ import { BenefitsComponent } from './benefits/benefits.component';
     HeroComponent,
     PdfComponent,
     HomeComponent,
-    BenefitsComponent
+    BenefitsComponent,
+    PlansComponent
 
   ],
   imports: [
@@ -30,7 +33,8 @@ import { BenefitsComponent } from './benefits/benefits.component';
     FormsModule,
     SharedModule,
     BrowserAnimationsModule,
-    ToastModule
+    ToastModule,
+    CardModule
   ],
   exports: [
     HomeComponent

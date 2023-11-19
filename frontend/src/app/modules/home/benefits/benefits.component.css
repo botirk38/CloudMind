@@ -1,0 +1,9 @@
+._benefits{
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap:3rem;
+    margin-top: 2rem;
+    padding: 0.5rem;
+}
