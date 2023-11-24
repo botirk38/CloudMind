@@ -1,4 +1,5 @@
 import { Component } from '@angular/core'
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -8,6 +9,8 @@ import { Component } from '@angular/core'
 })
 export class HeroComponent {
 
+  constructor(private router: Router) {}
+
   loading = false;
   avatars = Array(4).fill(null);
 
@@ -15,8 +18,8 @@ export class HeroComponent {
     this.loading = true;
   }
 
-  goToDemo(){
-    
+  goToDemo() : void{
+    this.router.navigate(['/demo']);
   }
 
 

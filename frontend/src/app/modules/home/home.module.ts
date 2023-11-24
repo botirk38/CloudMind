@@ -18,6 +18,8 @@ import { TabMenuModule } from 'primeng/tabmenu';
 import { FeaturesComponent } from './features/features.component';
 import { FooterComponent } from './footer/footer.component';
 import { DesktopNavComponent } from './nav/desktop-nav/desktop-nav.component';
+import { MenuItemComponent } from './nav/menu-item/menu-item.component';
+import { PopoverComponent } from './nav/popover/popover.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +31,9 @@ import { DesktopNavComponent } from './nav/desktop-nav/desktop-nav.component';
     PlansComponent,
     FeaturesComponent,
     FooterComponent,
-    DesktopNavComponent
+    DesktopNavComponent,
+    MenuItemComponent,
+    PopoverComponent
 
   ],
   imports: [
