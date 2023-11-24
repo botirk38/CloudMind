@@ -24,10 +24,6 @@ export class PlansComponent implements OnInit {
   menuItems: MenuItem[] | undefined;
   activeItem: MenuItem | undefined;
 
-  getObjectKeys(obj: any): string[] {
-    console.log(obj);
-    return obj ? Object.keys(obj) : [];
-  }
 
   plans: Plans = {
     monthly: {

@@ -1,0 +1,15 @@
+
+<section class="_features">
+    <h1>Explore our <span>features</span></h1>
+    <p>Our platform offers a variety of features designed to enhance your productivity, streamline your workflow, and help you achieve your goals more <span>efficiently</span>.</p>
+
+    <div class="features_list" *ngFor="let feature of features">
+        <div class="feature">
+            <picture>
+                <img [src]="feature.image" [alt]="feature.title" />
+            </picture>
+            <h3>{{ feature.title }}</h3>
+            <p>{{ feature.description }}</p>
+        </div>
+    </div>
+</section>

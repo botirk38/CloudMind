@@ -1,8 +1,14 @@
 
 ._sections{
     margin-top:3rem;
-
+    text-align: center;
 }
+._sections > h2{
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+
 
 span{
     color: #3B82F6;

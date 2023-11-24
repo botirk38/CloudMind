@@ -15,6 +15,7 @@ import { BenefitsComponent } from './benefits/benefits.component';
 import { Card, CardModule } from 'primeng/card';
 import { PlansComponent } from './plans/plans.component';
 import { TabMenuModule } from 'primeng/tabmenu';
+import { FeaturesComponent } from './features/features.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import { TabMenuModule } from 'primeng/tabmenu';
     PdfComponent,
     HomeComponent,
     BenefitsComponent,
-    PlansComponent
+    PlansComponent,
+    FeaturesComponent
 
   ],
   imports: [
