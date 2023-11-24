@@ -16,6 +16,8 @@ import { Card, CardModule } from 'primeng/card';
 import { PlansComponent } from './plans/plans.component';
 import { TabMenuModule } from 'primeng/tabmenu';
 import { FeaturesComponent } from './features/features.component';
+import { FooterComponent } from './footer/footer.component';
+import { DesktopNavComponent } from './nav/desktop-nav/desktop-nav.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +27,9 @@ import { FeaturesComponent } from './features/features.component';
     HomeComponent,
     BenefitsComponent,
     PlansComponent,
-    FeaturesComponent
+    FeaturesComponent,
+    FooterComponent,
+    DesktopNavComponent
 
   ],
   imports: [

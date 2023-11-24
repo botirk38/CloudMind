@@ -43,10 +43,18 @@ span{
 picture{
     width: 100%;
     height: 100%;
+    max-width: 40em;
 }
 
 picture > img{
     width: 100%;
     height: 100%;
     object-fit: cover;
+}
+
+@media screen and (min-width: 768px) {
+    .features_list{
+        flex-direction: row;
+
+    }
 }

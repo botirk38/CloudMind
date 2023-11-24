@@ -1,23 +1,21 @@
 
 <section class="_hero">
-    <div class="_hero_title_container">
+    <div>
         <h1>Elevate PDF Collaboration
             <span>AI-powered teamwork</span> on every page.
         </h1>
-    </div>
 
-    <div class = "_hero_text_container">
         <p> Unlock collaborative genius in PDFs—discuss, annotate, and explore with your team in real-time, powered by AI. </p>
-    </div>
 
-    <div class = "_hero_button_container">
-        <p-button label="Sign up now!" [loading] = loading icon="pi pi-bolt" iconPos="right" (onClick) = "goToSignup()"></p-button>
-        <p-button label = "View demo" icon="pi pi-play" iconPos="right" [link] = 'true' (onClick) = "goToDemo()"></p-button>
+        <div class = "_hero_button_container">
+            <p-button label="Sign up now!" [loading] = loading icon="pi pi-bolt" iconPos="right" (onClick) = "goToSignup()"></p-button>
+            <p-button label = "View demo" icon="pi pi-play" iconPos="right" [link] = 'true' (onClick) = "goToDemo()"></p-button>
+        </div>
 
-    </div>
-    <div class="_avatars">
-        <p-avatar *ngFor="let avatar of avatars" image="https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png" styleClass="mr-2" size="large" shape="circle"></p-avatar>
-        <p>Our <span>100,000+</span> users love us!</p>
+        <div class="_avatars">
+            <p-avatar *ngFor="let avatar of avatars" image="https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png" styleClass="mr-2" size="large" shape="circle"></p-avatar>
+            <p>Our <span>100,000+</span> users love us!</p>
+        </div>
     </div>
     <div class="video-player">
         <app-video></app-video>
