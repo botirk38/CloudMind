@@ -27,6 +27,7 @@ export class DemoComponent {
       this.pdfService.sendPdfToBackend(file).subscribe(response => {
         next: (response: any) => {
           console.log(response);
+          
         };
         err: (error: any) => {
           console.log(error);
