@@ -1,6 +1,6 @@
 import { Component, OnDestroy } from '@angular/core';
 import { PdfService } from 'src/app/services/pdf.service';
-import { Subject, switchMap, takeUntil } from 'rxjs';
+import { Subject, switchMap, takeUntil, tap } from 'rxjs';
 import { MessageService } from 'primeng/api';
 
 @Component({
@@ -19,29 +19,27 @@ export class PdfComponent implements OnDestroy {
   constructor(private pdfService: PdfService, private messageService : MessageService) {}
 
   uploadPDF() {
-    if (this.fileToUpload) {
+    if(this.fileToUpload){
       this.isLoading = true;
-      this.pdfService.extractPdfContent(this.fileToUpload).pipe(
-        switchMap(text => this.pdfService.sendToBackend(text)),
-        takeUntil(this.unsubscribe$)
-      ).subscribe({
-        next: (response) => {
-          console.log(response);
-          this.messageService.add({ severity: 'success', summary: 'Upload Success', detail: 'PDF processed successfully' });
-          this.isLoading = false;
-        },
-        error: (error) => {
-          this.error = error.message;
-          this.isLoading = false;
-        }
-      });
+      this.pdfService
+        .sendPdfToBackend(this.fileToUpload)
+        .pipe(
+          takeUntil(this.unsubscribe$),
+          tap( response =>  {
+            this.isLoading = false;
+            this.error = "";
+            console.log(response);
+          })
+        )
+        .subscribe();
     }
   }
   
   handleFileInput(file: File) {
+    this.messageService.add({ severity: 'success', summary: 'Success', detail: 'File Uploaded with Auto Mode' });
     this.fileToUpload = file;
     this.error = "";
-    this.messageService.add({ severity: 'info', summary: 'Success', detail: 'File Uploaded with Auto Mode' });
+    this.uploadPDF();
   }
 
   ngOnDestroy() {

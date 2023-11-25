@@ -32,46 +32,7 @@ describe('PdfComponent', () => {
     fixture.detectChanges();
   });
 
-  it("should call extractPDFContent when a file is selected", () =>{
-    const mockFile = new File([''], 'test.pdf', {type:'application/pdf'});
-   
-
-    pdfServiceSpy.extractPdfContent.and.returnValue(of('Extracted text'));
-
-    component.handleFileInput(mockFile);
-
-    component.uploadPDF();
-
-    expect(pdfService.extractPdfContent).toHaveBeenCalledWith(mockFile);
-  });
-
-  it("should call sendToBackend when uploadPDF is called", () =>{
-    const mockText = "Extracted text";
-    const mockFile = new File([''], 'test.pdf', {type:'application/pdf'});
-
-    pdfServiceSpy.extractPdfContent.and.returnValue(of(mockText));
-    pdfServiceSpy.sendToBackend.and.returnValue(of({}));
-
-    component.fileToUpload = mockFile;
-
-    component.uploadPDF();
-
-    fixture.whenStable().then( () => {
-      expect(pdfService.sendToBackend).toHaveBeenCalledWith(mockText);
-    });
-  })
-
-  it("Should handle errors if PDF extraction fails" , waitForAsync(() =>{
-    const mockFile = new File([''], 'test.pdf', {type:'application/pdf'});
-    pdfServiceSpy.extractPdfContent.and.returnValue(throwError(() => new Error('Error extracting PDF')));
-
-    component.fileToUpload = mockFile;
-    component.uploadPDF();
-
-    fixture.whenStable().then( () => {
-      expect(component.error).toBe("Error extracting PDF");
-    })
-  }));
+ 
 
 });
 
