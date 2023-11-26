@@ -10,6 +10,8 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import chatpdf.model.FileUploadResponse;
+import chatpdf.model.Message;
+import chatpdf.model.OpenAIChatRequest;
 import chatpdf.model.RetrieveFileContentResponse;
 
 import org.slf4j.Logger;
@@ -17,6 +19,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.client.RestClientException;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class OpenAIService {
@@ -27,8 +31,13 @@ public class OpenAIService {
     @Value("${openai.apiFiles.url}")
     private String apiFilesUrl;
 
+    @Value("${openai.apiChat.url}")
+    private String apiChatUrl;
+
     private final RestTemplate restTemplate;
     private final Logger logger = LoggerFactory.getLogger(OpenAIService.class);
+    private final List<Message> messages = new ArrayList<>();
+
 
     public OpenAIService(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
@@ -94,6 +103,45 @@ public class OpenAIService {
             logger.error("Error while retrieving file content: ", e);
             throw new IOException("Error while retrieving file content: " + e.getMessage(), e);
         }
+    }
+
+    public String getResponse(String fileContent, String model) throws IOException{
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(apiKey);
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        Message message = new Message("user", fileContent);
+        messages.add(message);
+
+        HttpEntity<List<Message>> requestEntity = new HttpEntity<>(messages, headers);
+        ResponseEntity<OpenAIChatRequest> response;
+
+        String chatCompletionsUrl = apiChatUrl;
+
+        try{
+            response = restTemplate.exchange(chatCompletionsUrl, HttpMethod.POST, requestEntity, OpenAIChatRequest.class);
+
+            if(response == null){
+                logger.error("Response from the server is null");
+                return new Error("Error: No response from server").toString();
+            }
+
+            OpenAIChatRequest openAIChatResponse = response.getBody();
+
+            if(openAIChatResponse == null){
+                logger.error("Response body is null");
+                return new Error("Error: Response body is null").toString();
+            }
+
+            return openAIChatResponse.getMessages().get(0).toString();
+            
+        }catch(RestClientException e){
+            logger.error("Error while retrieving file content: ", e);
+            throw new IOException("Error while retrieving file content: " + e.getMessage(), e);
+        }
+
+
+
     }
 
 }
