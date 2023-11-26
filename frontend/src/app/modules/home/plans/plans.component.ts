@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MenuItem } from 'primeng/api';
+import { trigger, transition, style, animate } from '@angular/animations';
+
 
 interface UserPlan {
   price: string;
@@ -17,8 +19,16 @@ type Plans = {
 
 @Component({
   selector: 'app-plans',
-  templateUrl: './plans.component.html',
+  templateUrl:'./plans.component.html',
   styleUrls: ['./plans.component.css'],
+  animations: [
+    trigger('fadeIn', [
+      transition(':enter', [
+        style({ opacity: 0 }),
+        animate('0.5s ease-out', style({ opacity: 1 })),
+      ]),
+    ]),
+  ]
 })
 export class PlansComponent implements OnInit {
   menuItems: MenuItem[] | undefined;

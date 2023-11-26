@@ -22,9 +22,9 @@ public class OpenAiFetch {
     @PostConstruct
     public void exampleUsage() {
         CompletionRequest request = CompletionRequest.builder()
-                .prompt("what are top 10  anime based on fan liking'")
+                .prompt("TOP 5 richest countries") // "What is the meaning of life?"'")
                 .model("text-davinci-002")
-                .maxTokens(60)
+                .maxTokens(70)
                 .build();
 
         String result = openAiService.createCompletion(request).getChoices().get(0).getText();
