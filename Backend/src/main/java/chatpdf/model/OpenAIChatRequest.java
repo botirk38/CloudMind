@@ -16,7 +16,11 @@ public class OpenAIChatRequest {
         return messages;
     }
 
-    
+    public String getModel() {
+        return model;
+    }
+
+
 
 
 

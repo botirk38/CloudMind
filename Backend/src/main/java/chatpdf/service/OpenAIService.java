@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 import chatpdf.model.FileUploadResponse;
 import chatpdf.model.Message;
 import chatpdf.model.OpenAIChatRequest;
+import chatpdf.model.OpenAIChatResponse;
 import chatpdf.model.RetrieveFileContentResponse;
 
 import org.slf4j.Logger;
@@ -110,31 +111,32 @@ public class OpenAIService {
         headers.setBearerAuth(apiKey);
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-        Message message = new Message("user", fileContent);
-        messages.add(message);
+       
 
-        HttpEntity<List<Message>> requestEntity = new HttpEntity<>(messages, headers);
-        ResponseEntity<OpenAIChatRequest> response;
+        OpenAIChatRequest openAIChatRequest = new OpenAIChatRequest(messages, model);
+
+        HttpEntity<OpenAIChatRequest> requestEntity = new HttpEntity<>(openAIChatRequest, headers);
+        ResponseEntity<OpenAIChatResponse> response;
 
         String chatCompletionsUrl = apiChatUrl;
 
         try{
-            response = restTemplate.exchange(chatCompletionsUrl, HttpMethod.POST, requestEntity, OpenAIChatRequest.class);
+            response = restTemplate.exchange(chatCompletionsUrl, HttpMethod.POST, requestEntity, OpenAIChatResponse.class);
 
             if(response == null){
                 logger.error("Response from the server is null");
                 return new Error("Error: No response from server").toString();
             }
 
-            OpenAIChatRequest openAIChatResponse = response.getBody();
+            OpenAIChatResponse openAIChatResponse = response.getBody();
 
             if(openAIChatResponse == null){
                 logger.error("Response body is null");
                 return new Error("Error: Response body is null").toString();
             }
 
-            return openAIChatResponse.getMessages().get(0).toString();
-            
+            return openAIChatResponse.getChoices().get(0).getMessage().getContent();
+
         }catch(RestClientException e){
             logger.error("Error while retrieving file content: ", e);
             throw new IOException("Error while retrieving file content: " + e.getMessage(), e);

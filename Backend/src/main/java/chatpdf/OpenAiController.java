@@ -33,4 +33,13 @@ public class OpenAiController {
             return ResponseEntity.status(500).body("Error retrieving file content: " + e.getMessage());
         }
     }
+
+    @PostMapping("/chatCompletions")
+    public ResponseEntity<?> chatCompletions(@RequestBody String message){
+        try{
+            return ResponseEntity.ok(openAiService.getResponse(message, "gpt-3.5-turbo"));
+        }catch (IOException e){
+            return ResponseEntity.status(500).body("Error retrieving file content: " + e.getMessage());
+        }
+    }
 }
