@@ -27,8 +27,10 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.web.client.RestTemplate;
 
-import chatpdf.OpenAIService;
 import chatpdf.OpenAiController;
+import chatpdf.model.FileUploadResponse;
+import chatpdf.model.RetrieveFileContentResponse;
+import chatpdf.service.OpenAIService;
 
 @SpringBootTest(classes = { OpenAiController.class, OpenAIService.class })
 @AutoConfigureMockMvc
@@ -66,8 +68,38 @@ public class OpenAIServiceTest {
                 eq(apiFilesUrl),
                 eq(HttpMethod.POST),
                 any(HttpEntity.class),
-                eq(String.class));
+                eq(FileUploadResponse.class));
     }
+
+
+    @Test
+    public void testValidPdfContentRetrieval() throws Exception {
+        String fileId = "file-abc123";
+        String expectedContent = "Expected file content";
+        ResponseEntity<RetrieveFileContentResponse> mockResponse = new ResponseEntity<>(
+            new RetrieveFileContentResponse(expectedContent), HttpStatus.OK
+        );
+    
+        when(restTemplate.exchange(
+                eq(apiFilesUrl + "/" + fileId + "/content"),
+                eq(HttpMethod.GET),
+                any(HttpEntity.class),
+                ArgumentMatchers.<Class<RetrieveFileContentResponse>>any()
+        )).thenReturn(mockResponse);
+    
+        mockMvc.perform(MockMvcRequestBuilders.get("/retrieveContent")
+                .param("fileId", fileId))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().string(expectedContent));
+    
+        verify(restTemplate).exchange(
+                eq(apiFilesUrl + "/" + fileId + "/content"),
+                eq(HttpMethod.GET),
+                any(HttpEntity.class),
+                eq(RetrieveFileContentResponse.class));
+    }
+    
 
     
 }
