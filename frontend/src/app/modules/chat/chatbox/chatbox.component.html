@@ -1,8 +1,0 @@
-<app-message *ngFor="let message of messages" [message]="message"></app-message>
-
-<div>
-    <app-inputbox (messageEvent)="handleMessage($event)" (typingEvent)="handleIsTyping($event)"></app-inputbox>
-    <app-send-btn [isTyping]="isTyping" (sendEvent)="handleMessage($event)"></app-send-btn>
-</div>
-
-

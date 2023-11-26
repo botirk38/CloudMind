@@ -1,0 +1,6 @@
+<div *ngIf="isVisible" class="popover-class" [ngStyle]="{ left: left + 'px' }">
+    <div *ngFor="let title of titles; let i = index">
+      <h2>{{ titles }}</h2>
+      <p>{{ contents && contents[i] ? contents[i] : "" }}</p>
+    </div>
+  </div>

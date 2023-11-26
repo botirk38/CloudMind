@@ -1,30 +1,32 @@
 <!-- Updated mobile-nav.component.html -->
 <nav class="mobile-nav" [ngClass]="{'menu-open': menuOpen}">
+
+    <picture class="logo">
+        <img src="assets/images/logo.jpeg" alt="Logo">
+    </picture>
+
     <i class="pi pi-bars" (click)="toggleMenu()"></i>
 
     <section class="dropdown">
-        <picture>
+        <picture class="_dropdown-logo">
             <img src="assets/images/logo.jpeg" alt="Logo">
         </picture>
 
         <ul class="dropdown-items">
             <li class="dropdown-item">
-                <a>Try it</a>
+                <a href="#benefits">Benefits</a>
             </li>
             <li class="dropdown-item">
-                <a>Features</a>
+                <a href="#features">Features</a>
             </li>
             <li class="dropdown-item">
-                <a>Use Cases</a>
+                <a href="#plans">Plans</a>
             </li>
             <li class="dropdown-item">
-                <a>Prices</a>
-            </li>
-            <li class="dropdown-item">
-                <a>FAQ</a>
+                <a href="#faq">FAQ</a>
             </li>
         </ul>
 
-        <p-button label="Try ChatToPDF Now!"></p-button>
+        <p-button [loading] = "loading" label="Try ChatToPDF Now!" (onClick) = "goToSignup()"></p-button>
     </section>
 </nav>

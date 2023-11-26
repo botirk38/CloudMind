@@ -1,12 +1,14 @@
 .mobile-nav {
     position: relative;
     display: flex;
-    width: 100%;
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex-end;
-    padding: 0 1rem;
-    z-index: 1;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 1rem;
+  }
+
+  i{
+    margin-top: 0;
   }
   
   .pi-bars {
@@ -15,7 +17,7 @@
     cursor: pointer;
     transition: transform 0.3s ease, background-color 0.3s ease;
     background-color: white;
-    padding: 0.5rem;
+    padding: 1rem;
     border-radius: 0.5em;
   }
   
@@ -25,9 +27,10 @@
   }
   
   .dropdown {
+    position: absolute;
     display: flex;
     flex-direction: column;
-    justify-content: start;
+    justify-content: flex-start;
     align-items: center;
     background-color: white;
     border-radius: 0.5em;
@@ -44,7 +47,7 @@
   .menu-open .dropdown {
     position: absolute;
     top: 100%;
-    right: 20%;
+    right: 0;
     min-width: 95vw;
     z-index: 1;
     opacity: 1;
@@ -53,11 +56,17 @@
     transition-delay: 0s; 
   }
 
-  picture{
+  ._dropdown-logo{
     width: 60%;
     height: 60%;
     object-fit: cover;
   }
+
+  .logo{
+    width:30%;
+    height:30%;
+  }
+
 
   picture > img{
     width: 100%;
@@ -79,6 +88,18 @@
   .dropdown-item{
     font-size: 1.2rem;
     font-weight: bold;
+  }
+
+  a{
+    text-decoration: none;
+    color: black;
+  }
+
+  @media  screen and (min-width: 768px) {
+    .mobile-nav {
+      display: none;
+    }
+    
   }
   
   

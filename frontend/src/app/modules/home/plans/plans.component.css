@@ -1,0 +1,51 @@
+
+._sections{
+    margin-top:3rem;
+    text-align: center;
+}
+._sections > h2{
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+
+
+span{
+    color: #3B82F6;
+    font-weight: bold;
+}
+
+.plans-container{
+    display: flex;
+    justify-content: flex-start;
+    align-items:center;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 2rem;
+    min-width: 100%;
+}
+
+.plans-container > * {
+    width:100%;
+    padding: 1em;
+    max-width: 45em;
+}
+ng-container{
+    width:100%;
+}
+
+.subtext{
+    line-height: 1.5;
+}
+
+p{
+    font-weight:600;
+}
+
+ul{
+    list-style: none;
+    padding: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}

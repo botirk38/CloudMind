@@ -7,9 +7,14 @@ import { Component } from '@angular/core';
 })
 export class MobileNavComponent {
   menuOpen = false;
+  loading = false;
 
   toggleMenu() {
     this.menuOpen = !this.menuOpen;
+  }
+
+  goToSignup(){
+    this.loading = true;
   }
 
 
