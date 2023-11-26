@@ -1,8 +1,5 @@
 package chatpdf;
 
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.*;
@@ -11,11 +8,15 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.web.client.RestClientException;
+
 
 import java.io.IOException;
 
 @Service
-public class OpenAiService {
+public class OpenAIService {
 
     @Value("${openai.api.key}")
     private String apiKey;
@@ -23,14 +24,14 @@ public class OpenAiService {
     @Value("${openai.apiFiles.url}")
     private String apiFilesUrl;
 
-    @Value("${openai.apiChat.url}")
-    private String apiChatUrl;
+    private final RestTemplate restTemplate;
+    private final Logger logger = LoggerFactory.getLogger(OpenAIService.class);
 
-    private static final Logger logger = LoggerFactory.getLogger(OpenAiService.class);
+    public OpenAIService(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
+    }
 
-
-    public ResponseEntity<String> uploadFile(MultipartFile file, String purpose) throws IOException{
-        RestTemplate restTemplate = new RestTemplate();
+    public String uploadFile(MultipartFile file, String purpose) throws IOException {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
         headers.setBearerAuth(apiKey);
@@ -39,13 +40,20 @@ public class OpenAiService {
         body.add("file", new InputStreamResource(file.getInputStream()));
         body.add("purpose", purpose);
 
-
         HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
-        logger.info("Headers: {}", requestEntity.getHeaders());
-        logger.info("Body: {}", requestEntity.getBody());
+        ResponseEntity<String> response;
 
-        return restTemplate.exchange(apiFilesUrl, HttpMethod.POST, requestEntity, String.class);
+        try {
+            response = restTemplate.exchange(apiFilesUrl, HttpMethod.POST, requestEntity, String.class);
+            if (response == null) {
+                logger.error("Response from the server is null");
+                return "Error: No response from server";
+            }
+
+            return response.getBody();
+        } catch (RestClientException e) {
+            logger.error("Error while uploading file: ", e);
+            throw new IOException("Error while uploading file: " + e.getMessage(), e);
+        }
     }
-
-    
 }
