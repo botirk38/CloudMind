@@ -1,6 +1,11 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { DemoComponent } from './demo.component';
+import { FormsModule } from '@angular/forms'; // Ensure FormsModule is imported here
+import { CommonModule } from '@angular/common';
+
+
+
+
 
 
 
@@ -9,7 +14,8 @@ import { DemoComponent } from './demo.component';
     DemoComponent
   ],
   imports: [
-    CommonModule
+    CommonModule,
+    FormsModule
   ]
 })
 export class DemoModule { }

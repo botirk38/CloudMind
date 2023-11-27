@@ -5,6 +5,8 @@ import { ROUTE_PATHS } from 'src/app/route-paths';
 import { HomeComponent } from '../home/home.component';
 import { DemoComponent } from '../demo/demo.component';
 
+
+
 const routes : Routes = [
   {path: ROUTE_PATHS.home, component: HomeComponent},
   {path: ROUTE_PATHS.demo, component: DemoComponent }

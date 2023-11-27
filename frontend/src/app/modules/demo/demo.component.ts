@@ -2,6 +2,10 @@ import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { PdfService } from 'src/app/services/pdf.service';
 
+
+
+
+
 interface Message {
   text: string;
   date: Date;
@@ -14,7 +18,7 @@ interface Message {
   styleUrls: ['./demo.component.css']
 })
 export class DemoComponent {
-
+  userInput: string = ''; 
   constructor(private pdfService: PdfService, private http: HttpClient) {}
 
   messages: Message[] | undefined;
@@ -43,5 +47,9 @@ export class DemoComponent {
     };
     this.messages?.push(message);
   }
+  sendMessage(): void {
+    console.log('hello');
+  }
+
 
 }

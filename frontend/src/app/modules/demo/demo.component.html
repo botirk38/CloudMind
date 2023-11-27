@@ -1,3 +1,29 @@
 <main>
-    
-</main>
+    <!-- <div class="chatbox">
+      <div class="messages" *ngFor="let message of messages">
+        <p><strong>{{ message.sender }}</strong>: {{ message.text }}</p>
+      </div> -->
+      <div class="header">
+      <h1><span class= "mutliText">Unlock Your Writing Potential with ChatPDF, Crafted with Cutting-Edge AI</span></h1>
+       </div>
+      <div class="input-area">
+        <input type="text" placeholder="Type your message here">
+        <button (click)="sendMessage()">Send</button>
+      </div>
+
+
+
+      <script src="https://unpkg.com/typed.js@2.0.16/dist/typed.umd.js"></script>
+
+
+<script>
+    var typingeffect = new Typed(".mutliText",{ 
+        strings : ["ChatPDF ", "Crafted with Cutting-Edge AI"], 
+        loop : true,
+        typeSpeed: 50
+
+
+    });
+</script>
+    <script defer src="script.js"></script>
+  </main>
