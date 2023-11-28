@@ -2,32 +2,32 @@
 ._sections {
     margin-top: 3rem;
     text-align: center;
-    background-color: #f5f5f5; /* Light grey background */
+    background-color: #f5f5f5; 
     padding: 2rem;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
   }
   
 ._sections > h2 {
   font-size: 2.5rem;
   font-weight: bold;
-  font-family: 'Arial', sans-serif; /* Example font */
-  color: #333; /* Darker font color for contrast */
-  margin-bottom: 1rem; /* Spacing below heading */
+  font-family: 'Arial', sans-serif; 
+  color: #333; 
+  margin-bottom: 1rem; 
 }
 
 
 
 
 span {
-    color: #3B82F6; /* Brand accent color */
+    color: #3B82F6; 
     font-weight: bold;
-    text-decoration: underline; /* Example decoration */
+    text-decoration: underline; 
   }
   
 
   .plans-container {
     display: flex;
-    justify-content: center; /* Center align items */
+    justify-content: center; 
     align-items: center;
     flex-direction: column;
     gap: 1.5rem;
@@ -48,12 +48,12 @@ ng-container{
 .subtext {
     line-height: 1.6;
     font-size: 1.1rem;
-    color: #666; /* Softer color for readability */
+    color: #666; 
   }
   
 p{
     font-weight:600;
-    color: #444; /* Darker color for text */
+    color: #444; 
 
 }
 
@@ -66,7 +66,13 @@ ul{
 }
 
 ul li {
-    background-color: #e7e7e7; /* Light background for list items */
+    background-color: #e7e7e7; 
     padding: 0.5rem;
-    border-radius: 5px; /* Rounded corners for list items */
+    border-radius: 5px; 
   }
+  @media (max-width: 768px) {
+    .plans-container {
+      flex-direction: column; 
+    }
+  }
+  
