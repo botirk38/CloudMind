@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { PdfService } from 'src/app/services/pdf.service';
 import Typed from 'typed.js';
 
+
 interface Message {
   text: string;
   date: Date;
@@ -15,7 +16,7 @@ interface Message {
   styleUrls: ['./demo.component.css']
 })
 export class DemoComponent implements OnInit {
-  userInput: string = '';
+  message : string | undefined;
   messages: Message[] | undefined;
   samplePDF = '/assets/sample.pdf';
 
@@ -47,16 +48,5 @@ export class DemoComponent implements OnInit {
     });
   }
         
- 
 
-  addMessage(text: string, author: 'user' | 'AI'): void {
-    const message = { text, date: new Date(), author };
-    this.messages?.push(message);
-  }
-
-  sendMessage(): void {
-    console.log('Message sent:', this.userInput);
-    // Add more logic for sending a message here
-    this.userInput = '';
-  }
 }

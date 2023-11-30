@@ -1,9 +1,0 @@
-<div *ngIf="message" class="message" [ngClass]="{'user-message': message.isUser, 'bot-message': !message.isUser}">
-    {{message.text}}
-    <picture>
-        <img *ngIf="message.isUser" src="assets/images/user_icon.png" alt ="User Avatar"/>
-        <img *ngIf="!message.isUser" src="" alt ="Bot Avatar"/>
-    </picture>
-        {{message.text}}
-</div>
-
