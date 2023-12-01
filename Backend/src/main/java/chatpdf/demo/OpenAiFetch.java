@@ -22,7 +22,7 @@ public class OpenAiFetch {
     @PostConstruct
     public void exampleUsage() {
         CompletionRequest request = CompletionRequest.builder()
-                .prompt("TOP 5 richest countries") // "What is the meaning of life?"'")
+                .prompt("TOP 5 richest countries") 
                 .model("text-davinci-002")
                 .maxTokens(70)
                 .build();
