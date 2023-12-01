@@ -6,6 +6,8 @@ import { InputTextModule } from 'primeng/inputtext';
 import { FormsModule } from '@angular/forms';
 import { MessageBoxComponent } from './message-box/message-box.component';
 import { CardModule } from 'primeng/card';
+import { CardComponent } from './card/card.component';
+import { ButtonModule } from 'primeng/button';
 
 
 
@@ -14,13 +16,15 @@ import { CardModule } from 'primeng/card';
   declarations: [
     VideoComponent,
     ChatComponent,
-    MessageBoxComponent
+    MessageBoxComponent,
+    CardComponent
   ],
   imports: [
     CommonModule,
     FormsModule,
     InputTextModule,
-    CardModule
+    CardModule,
+    ButtonModule
   ],
   exports: [
     VideoComponent,
