@@ -1,8 +1,4 @@
-.input-area {
-    text-align: center;
-    margin-top: 300px;
-    font-size: 24px;
-}
+
 .header {
     text-align: center;
     font-size: 24px;
@@ -13,36 +9,8 @@
 
   }
   
-  .input-area input[type="text"] {
-    font-size: 20px; 
-    font-family: 'Arial', sans-serif; 
-    padding: 10px 20px; 
-    border: 2px solid #3B82F6; 
-    border-radius: 5px; 
-    color: #333; 
-    background-color: #FFF; 
-    width: 50%; 
-    transition: all 0.3s ease; 
+  main {
+    
+    height: 100vh;
+    width: 100%;
   }
-  
-  .input-area input[type="text"]:hover,
-  .input-area input[type="text"]:focus {
-    border-color: #c7beb0;
-    box-shadow: 0 0 8px 0 rgba(247, 247, 247, 0.6); 
-  }
-  
-  .input-area button {
-    padding: 10px 20px;
-    margin-left: 10px;
-    border: none;
-    border-radius: 5px;
-    background-color: #3B82F6;
-    color: white;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  .input-area button:hover {
-    background-color: rgb(8, 59, 169);
-  }
-  

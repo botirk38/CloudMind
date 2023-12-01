@@ -1,7 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { PdfService } from 'src/app/services/pdf.service';
-import { HttpClient } from '@angular/common/http';
-import { switchMap, tap } from 'rxjs';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Message } from '../../demo/demo.component';
 
 
 
@@ -12,7 +10,12 @@ import { switchMap, tap } from 'rxjs';
 })
 export class ChatComponent {
 
+  @Input() message: string | undefined;
+  @Output() messageChange = new EventEmitter<string>();
+  @Input() messages: Message[] | undefined;
 }
+
+
   
   
 

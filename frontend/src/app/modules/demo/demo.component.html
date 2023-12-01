@@ -3,20 +3,10 @@
       <div class="messages" *ngFor="let message of messages">
         <p><strong>{{ message.sender }}</strong>: {{ message.text }}</p>
       </div> -->
-  <div class="header">
-    <h1>
-      <span class="mutliText"
-        >Unlock Your Writing Potential with ChatPDF, Crafted with Cutting-Edge
-        AI</span
-      >
-    </h1>
-  </div>
+ 
+      <app-chat></app-chat>
 
-  <div class="card flex justify-content-center">
-    <span class="p-float-label">
-        <input pInputText id="message" [(ngModel)]="message" />
-        <label htmlFor="message">Username</label>
-    </span>
-  </div>
+
+  
 
 </main>

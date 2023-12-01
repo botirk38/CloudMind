@@ -4,7 +4,7 @@ import { PdfService } from 'src/app/services/pdf.service';
 import Typed from 'typed.js';
 
 
-interface Message {
+export interface Message {
   text: string;
   date: Date;
   author: 'user' | 'AI';
@@ -35,6 +35,7 @@ export class DemoComponent implements OnInit {
   ngOnInit(): void {
     this.initializeTyped();
     this.messages = [];
+    this.message = '';
     this.http.get(this.samplePDF, { responseType: 'blob' }).subscribe(blob => {
       const file = new File([blob], 'sample.pdf', { type: 'application/pdf' });
       this.pdfService.sendPdfToBackend(file).subscribe({
