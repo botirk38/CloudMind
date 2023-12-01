@@ -8,6 +8,7 @@ import { MessageBoxComponent } from './message-box/message-box.component';
 import { CardModule } from 'primeng/card';
 import { CardComponent } from './card/card.component';
 import { ButtonModule } from 'primeng/button';
+import { ScrollPanelModule } from 'primeng/scrollpanel';
 
 
 
@@ -24,11 +25,13 @@ import { ButtonModule } from 'primeng/button';
     FormsModule,
     InputTextModule,
     CardModule,
-    ButtonModule
+    ButtonModule,
+    ScrollPanelModule
   ],
   exports: [
     VideoComponent,
-    ChatComponent
+    ChatComponent,
+    CardComponent
 
   ]
 })

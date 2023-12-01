@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { MessageCard } from 'src/app/models/MessageCard';
 
 @Component({
   selector: 'app-card',
@@ -7,7 +8,6 @@ import { Component, Input } from '@angular/core';
 })
 export class CardComponent {
 
-  @Input() messageTopic: string | undefined;
-  @Input() message: string | undefined;
+  @Input() messageCard: MessageCard | undefined;
 
 }

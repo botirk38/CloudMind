@@ -12,7 +12,14 @@ export class ChatComponent {
 
   @Input() message: string | undefined;
   @Output() messageChange = new EventEmitter<string>();
-  @Input() messages: Message[] | undefined;
+
+  sendMessage(): void {
+    if(this.message){
+      console.log("Message sent: " + this.message);
+      this.messageChange.emit(this.message);
+      this.message = '';
+    }
+  }
 }
 
 

@@ -10,18 +10,19 @@ export class MessageService {
   messages: MessageCard[] = [];
 
 
-  addMessage(message: string, messageTopic: string, parentId: string | null, position: { x: number; y: number; }) {
+  addMessageParent(message: string, messageTopic: string, position: { x: number; y: number; }) {
     const id = this.generateId();
     const messageCard: MessageCard = {
       messageTopic,
       message,
-      parentId,
       id,
-      position
+      position,
+      parentId: null
     }
     this.messageMap.set(id, messageCard);
     this.messages.push(messageCard);
   }
+  
 
   generateId(): string {
     return Math.random().toString(36);

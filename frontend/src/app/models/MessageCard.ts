@@ -5,7 +5,12 @@ export type MessageCard = {
     answer?: string;
     parentId: string | null;
     id: string;
-    position: {x: number, y: number};
+    position: Coordinates;
+}
+
+type Coordinates = {
+    x: number;
+    y: number;
 }
 
 

@@ -9,9 +9,9 @@
     -->
 
     <div class="input-box">
-        <span class="p-float-label">
-          <input pInputText id="message" [(ngModel)]="message" (ngModelChange)="messageChange.emit($event)" />
-          <label htmlFor="message">Enter a message</label>
+        <span class="p-input-icon-left">
+            <i class="pi pi-search" (click)="sendMessage()"></i>
+            <input type="text" pInputText [(ngModel)]="message"  (keyup.enter)="sendMessage()"/>
         </span>
       </div>
 

@@ -1,12 +1,7 @@
 <main>
-  <!-- <div class="chatbox">
-      <div class="messages" *ngFor="let message of messages">
-        <p><strong>{{ message.sender }}</strong>: {{ message.text }}</p>
-      </div> -->
- 
-      <app-chat></app-chat>
+      <app-chat (messageChange)="onMessageReceived($event)"></app-chat>
 
-
+      <app-card *ngFor="let messageCard of messageService.messages" [messageCard]="messageCard"></app-card>
   
 
 </main>
