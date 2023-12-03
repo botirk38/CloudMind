@@ -1,5 +1,5 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Message } from '../../demo/demo.component';
+import { AfterViewInit, Component, EventEmitter, Input, Output } from '@angular/core';
+import { LayoutService } from 'src/app/services/layout.service';
 
 
 
@@ -8,10 +8,18 @@ import { Message } from '../../demo/demo.component';
   templateUrl: './chat.component.html',
   styleUrls: ['./chat.component.css'],
 })
-export class ChatComponent {
+export class ChatComponent implements AfterViewInit {
 
   @Input() message: string | undefined;
   @Output() messageChange = new EventEmitter<string>();
+
+  constructor(private layoutService:LayoutService) { }
+
+  ngAfterViewInit(): void {
+    this.layoutService.updateTextBoxPositionAndSize();
+    console.log("Text Box Position:",this.layoutService.textBoxPosition);
+    console.log("Text Box size:",this.layoutService.textBoxSize);
+  }
 
   sendMessage(): void {
     if(this.message){
@@ -21,7 +29,7 @@ export class ChatComponent {
     }
   }
 
-  
+
 }
 
 

@@ -43,8 +43,9 @@ export class DemoComponent implements OnInit {
   }
 
   onMessageCardClicked(messageCard: MessageCard) {
-    console.log(messageCard);
+    console.log(messageCard)
     this.messageService.activeMessageId = messageCard.id;
+    console.log(this.messageService.activeMessageId);
   }
 
   

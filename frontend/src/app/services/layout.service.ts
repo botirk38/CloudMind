@@ -1,48 +1,65 @@
 import { Injectable } from '@angular/core';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class LayoutService {
+  averageMessageSize = { x: 400, y: 272 };
+  textBoxPosition = { x: 0, y: 0 };
+  textBoxSize = { width: 0, height: 0 };
+  occupiedPositions = new Set<string>();
 
-  constructor() { }
-
-  averageMessageSize= {x:400, y:272};
-  textBoxPosition = {x:0, y:0};
-  textBoxSize = {width:0, height:0};
-
-  setTextBoxPositionAndSize(x: number, y: number){
+  updateTextBoxPositionAndSize() {
     const textBox = document.getElementById('textBox');
-    if(textBox){
+    if (textBox) {
       const textBoxRect = textBox.getBoundingClientRect();
-      this.textBoxPosition = {x: textBoxRect.left, y: textBoxRect.top};
-      this.setTextBoxSize(textBoxRect.width, textBoxRect.height);
+      this.textBoxPosition = {
+        x: textBoxRect.left + window.scrollX,
+        y: textBoxRect.top + window.scrollY,
+      };
+      this.textBoxSize = {
+        width: textBoxRect.width,
+        height: textBoxRect.height,
+      };
+    } else {
+      console.error('TextBox element not found');
     }
   }
 
-  setTextBoxSize(width: number, height: number){
-    this.textBoxSize = {width, height};
-  }
-
-
-
-  getTextBoxPosition(){
+  getTextBoxPosition(): { x: number; y: number } {
     return this.textBoxPosition;
   }
 
-  getTextBoxSize(){
+  getTextBoxSize(): { width: number; height: number } {
     return this.textBoxSize;
   }
 
-  isPositionAvailable(position: {x: number, y: number}): boolean {
-    const { x, y } = position;
-    const { x: textBoxX, y: textBoxY } = this.getTextBoxPosition();
-    const { width: textBoxWidth, height: textBoxHeight } = this.getTextBoxSize();
-    const { x: messageWidth, y: messageHeight } = this.averageMessageSize;
-  
-    const isWithinTextBoxHorizontally = x >= textBoxX && x + messageWidth <= textBoxX + textBoxWidth;
-    const isWithinTextBoxVertically = y >= textBoxY && y + messageHeight <= textBoxY + textBoxHeight;
-  
-    return isWithinTextBoxHorizontally && isWithinTextBoxVertically;
+  isPositionAvailable(position: { x: number; y: number }): boolean {
+    return !this.occupiedPositions.has(JSON.stringify(position));
+  }
+
+  getAvailablePositions(position: {
+    x: number;
+    y: number;
+  }): { x: number; y: number }[] {
+    const gapSize = 200; 
+    const directions = [
+      { x: this.averageMessageSize.x + gapSize, y: 0 }, // Right
+      { x: -this.averageMessageSize.x - gapSize, y: 0 }, // Left
+      { x: 0, y: this.averageMessageSize.y + gapSize }, // Down
+      { x: 0, y: -this.averageMessageSize.y - gapSize }, // Up
+    ];
+
+    for (const direction of directions) {
+      const newPos = {
+        x: position.x + direction.x,
+        y: position.y + direction.y,
+      };
+      if (this.isPositionAvailable(newPos)) {
+        return [newPos];
+      }
+    }
+
+    return [];
   }
 }
