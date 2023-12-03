@@ -1,5 +1,5 @@
 
-<div class="card" [style.left.px] = "messageCard?.position?.x" [style.top.px] = 'messageCard?.position?.y'>
+<div class="card" [style.left.px] = "messageCard?.position?.x" [style.top.px] = 'messageCard?.position?.y' (click)="onCardClick()">
     <p-card [header] = "messageCard?.messageTopic" [style]="{maxWidth:'25rem', height:'15rem'}">
         <p-scrollPanel [style]="{ maxWidth: '100%', height:'10rem'}">
             <p>

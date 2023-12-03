@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { PdfService } from 'src/app/services/pdf.service';
 import { MessageService } from 'src/app/services/message.service';
+import { MessageCard } from 'src/app/models/MessageCard';
 
 export interface Message {
   text: string;
@@ -15,7 +16,6 @@ export interface Message {
   styleUrls: ['./demo.component.css']
 })
 export class DemoComponent implements OnInit {
-  message : string | undefined;
   messages: Message[] | undefined;
   samplePDF = '/assets/sample.pdf';
 
@@ -24,7 +24,6 @@ export class DemoComponent implements OnInit {
 
   ngOnInit(): void {
     this.messages = [];
-    this.message = '';
     this.initializeSamplePdf();
     
   }
@@ -43,13 +42,12 @@ export class DemoComponent implements OnInit {
     });
   }
 
-  onMessageReceived(message: string){
-    const newPos = {x: 0, y: 0};
-    console.log("Message received: " + message);
-
-    this.messageService.addMessageParent(message, 'user', newPos);
-    console.log(this.messageService.messages);
+  onMessageCardClicked(messageCard: MessageCard) {
+    console.log(messageCard);
+    this.messageService.activeMessageId = messageCard.id;
   }
+
+  
 
 
 }

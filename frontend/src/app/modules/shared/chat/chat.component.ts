@@ -20,6 +20,8 @@ export class ChatComponent {
       this.message = '';
     }
   }
+
+  
 }
 
 

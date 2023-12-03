@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MessageCard } from 'src/app/models/MessageCard';
 
 @Component({
@@ -9,5 +9,12 @@ import { MessageCard } from 'src/app/models/MessageCard';
 export class CardComponent {
 
   @Input() messageCard: MessageCard | undefined;
+  @Output() messageCardClicked = new EventEmitter<MessageCard>();
+
+  onCardClick(){
+    if(this.messageCard){
+      this.messageCardClicked.emit(this.messageCard);
+    }
+  }
 
 }

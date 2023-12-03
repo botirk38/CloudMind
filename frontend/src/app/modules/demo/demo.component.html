@@ -1,7 +1,7 @@
 <main>
-      <app-chat (messageChange)="onMessageReceived($event)"></app-chat>
+      <app-chat (messageChange)="messageService.onMessageReceived($event)"></app-chat>
 
-      <app-card *ngFor="let messageCard of messageService.messages" [messageCard]="messageCard"></app-card>
+      <app-card (messageCardClicked)="onMessageCardClicked($event)" *ngFor="let messageCard of messageService.messages" [messageCard]="messageCard"></app-card>
   
 
 </main>
