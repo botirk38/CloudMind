@@ -1,15 +1,19 @@
 import { Injectable } from '@angular/core';
 import { MessageCard } from '../models/MessageCard';
+import { LayoutService } from './layout.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MessageService {
 
+  constructor(private layoutService: LayoutService) { }
+
   messageMap: Map<string, MessageCard> = new Map();
   messages: MessageCard[] = [];
   averageMessageSize= {x:400, y:272}
   activeMessageId: string | undefined;
+
 
 
   addMessageParent(message: string, messageTopic: string, position: { x: number; y: number; }) {
@@ -50,6 +54,9 @@ export class MessageService {
       const parentMessage = this.messageMap.get(this.activeMessageId)
       if(parentMessage){
         newPos = {x: parentMessage.position.x + this.averageMessageSize.x, y: parentMessage.position.y + this.averageMessageSize.y}
+        if(!this.layoutService.isPositionAvailable(newPos)){
+          newPos = {x: parentMessage.position.x, y: parentMessage.position.y + this.averageMessageSize.y + 40}
+        }
       }
     }
    this.activeMessageId? this.addMessageChild(message, 'AI', this.activeMessageId, newPos) : this.addMessageParent(message, 'AI', newPos);
@@ -57,5 +64,4 @@ export class MessageService {
 
 
 
-  constructor() { }
 }
