@@ -36,30 +36,33 @@ export class LayoutService {
   }
 
   calculateInitialPositionParent(): Coordinates {
-    let xPos = this.getTextBoxPosition().x + this.getTextBoxSize().width + this.averageMessageSize.x;
-    let yPos = this.getTextBoxPosition().y;
-    const result = new Array<Coordinates>(10);
-    const maxIterations = 1000; // Adjust this value as needed
+    let initialXPos = this.getTextBoxPosition().x + this.getTextBoxSize().width + this.averageMessageSize.x;
+    let initialYPos = this.getTextBoxPosition().y;
+    const result = [];
+    const maxIterations = 1000;
     let iterations = 0;
   
-    while (yPos <= this.getTextBoxPosition().y + this.getTextBoxSize().height && iterations < maxIterations) {
-      if (this.isPositionAvailable({ x: xPos, y: yPos }) && result.length < 10) {
-        result.push({ x: xPos, y: yPos });
-      }
-  
-      // Move to the next potential position
-      yPos += this.averageMessageSize.y;
-      if (yPos > this.getTextBoxPosition().y + this.getTextBoxSize().height) {
-        yPos = this.getTextBoxPosition().y;
-        xPos += this.averageMessageSize.x;
-      }
-  
-      iterations++;
+    for (let xPos = initialXPos; iterations < maxIterations && result.length < 10; xPos += this.averageMessageSize.x) {
+        for (let yPos = initialYPos; yPos <= this.getTextBoxPosition().y + this.getTextBoxSize().height && result.length < 10; yPos += this.averageMessageSize.y) {
+            if (this.isPositionAvailable({ x: xPos, y: yPos })) {
+                result.push({ x: xPos, y: yPos });
+            }
+            iterations++;
+            if (iterations >= maxIterations) break;
+        }
     }
   
-    const randomIndex = Math.floor(Math.random() * result.length);
-    return result[randomIndex];
-  }
+    console.log(result);
+    if (result.length > 0) {
+        const randomIndex = Math.floor(Math.random() * result.length);
+        console.log(result[randomIndex]);
+        return result[randomIndex];
+    } else {
+        console.log("No position found");
+        return {x: 100, y:100}; // Or some default value
+    }
+}
+
 
   isPositionAvailable(position: Coordinates): boolean {
     return !this.occupiedPositions.has(JSON.stringify(position));

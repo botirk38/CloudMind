@@ -50,7 +50,8 @@ export class MessageService {
   }
 
   onMessageReceived(message: string){
-    let newPos = {x:0, y:0};
+    let newPos = this.layoutService.calculateInitialPositionParent();
+    console.log("New pos:",newPos);
 
     if(this.activeMessageId){
       const parentMessage = this.messageMap.get(this.activeMessageId)
@@ -65,8 +66,6 @@ export class MessageService {
           console.log(newPos);
         }
       }
-    }else{
-      newPos = this.layoutService.calculateInitialPositionParent();
     }
    console.log("Message received: " + message);
    this.activeMessageId? this.addMessageChild(message, 'AI', this.activeMessageId, newPos) : this.addMessageParent(message, 'AI', newPos);
