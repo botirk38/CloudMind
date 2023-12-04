@@ -8,7 +8,7 @@ export type MessageCard = {
     position: Coordinates;
 }
 
-type Coordinates = {
+export type Coordinates = {
     x: number;
     y: number;
 }

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { MessageCard } from '../models/MessageCard';
+import { Coordinates, MessageCard } from '../models/MessageCard';
 import { LayoutService } from './layout.service';
 
 @Injectable({
@@ -16,7 +16,7 @@ export class MessageService {
 
 
 
-  addMessageParent(message: string, messageTopic: string, position: { x: number; y: number; }) {
+  addMessageParent(message: string, messageTopic: string, position: Coordinates) {
     const id = this.generateId();
     const messageCard: MessageCard = {
       messageTopic,
@@ -30,7 +30,7 @@ export class MessageService {
     this.layoutService.occupiedPositions.add(JSON.stringify(position));
   }
 
-  addMessageChild(message: string, messageTopic: string, parentId: string, position: { x: number, y: number}){
+  addMessageChild(message: string, messageTopic: string, parentId: string, position: Coordinates){
     const id = this.generateId();
     const messageCard: MessageCard = {
       messageTopic,
@@ -50,14 +50,14 @@ export class MessageService {
   }
 
   onMessageReceived(message: string){
-    let newPos = {x: 100, y: 100}; 
+    let newPos = {x:0, y:0};
 
     if(this.activeMessageId){
       const parentMessage = this.messageMap.get(this.activeMessageId)
       if(parentMessage){
         console.log("Parent message pos:",parentMessage.position)
         console.log("Parent message size:",this.averageMessageSize)
-        const availablePos = this.layoutService.getAvailablePositions(parentMessage.position);
+        const availablePos = this.layoutService.getAvailablePositions(parentMessage?.position);
         console.log("Available positions:",availablePos)
         if(availablePos.length > 0){
           const randomIndex = Math.floor(Math.random() * availablePos?.length);
@@ -65,6 +65,8 @@ export class MessageService {
           console.log(newPos);
         }
       }
+    }else{
+      newPos = this.layoutService.calculateInitialPositionParent();
     }
    console.log("Message received: " + message);
    this.activeMessageId? this.addMessageChild(message, 'AI', this.activeMessageId, newPos) : this.addMessageParent(message, 'AI', newPos);
