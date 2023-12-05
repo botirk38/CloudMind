@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Coordinates, MessageCard } from '../models/MessageCard';
 import { LayoutService } from './layout.service';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,7 @@ export class MessageService {
   messageMap: Map<string, MessageCard> = new Map();
   messages: MessageCard[] = [];
   averageMessageSize= {x:400, y:272}
-  activeMessageId: string | undefined;
+  activeMessageId = new BehaviorSubject<string | null>(null);
 
 
 
@@ -50,25 +51,22 @@ export class MessageService {
   }
 
   onMessageReceived(message: string){
+    let currentValue = this.activeMessageId.getValue();
     let newPos = this.layoutService.calculateInitialPositionParent();
-    console.log("New pos:",newPos);
 
-    if(this.activeMessageId){
-      const parentMessage = this.messageMap.get(this.activeMessageId)
+
+    if(this.activeMessageId && currentValue){
+      const parentMessage = this.messageMap.get(currentValue)
       if(parentMessage){
-        console.log("Parent message pos:",parentMessage.position)
-        console.log("Parent message size:",this.averageMessageSize)
         const availablePos = this.layoutService.getAvailablePositions(parentMessage?.position);
         console.log("Available positions:",availablePos)
         if(availablePos.length > 0){
           const randomIndex = Math.floor(Math.random() * availablePos?.length);
           newPos = availablePos[randomIndex];
-          console.log(newPos);
         }
       }
     }
-   console.log("Message received: " + message);
-   this.activeMessageId? this.addMessageChild(message, 'AI', this.activeMessageId, newPos) : this.addMessageParent(message, 'AI', newPos);
+   this.activeMessageId? this.addMessageChild(message, 'AI', currentValue ? currentValue : "", newPos) : this.addMessageParent(message, 'AI', newPos);
   }
 
 
