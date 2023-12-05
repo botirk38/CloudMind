@@ -4,71 +4,84 @@ import { LayoutService } from './layout.service';
 import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class MessageService {
+  constructor(private layoutService: LayoutService) {}
 
-  constructor(private layoutService: LayoutService) { }
-
-  messageMap: Map<string, MessageCard> = new Map();
+  messageMap: Map<string, MessageCard[]> = new Map();
   messages: MessageCard[] = [];
-  averageMessageSize= {x:400, y:272}
+  averageMessageSize = { x: 400, y: 272 };
   activeMessageId = new BehaviorSubject<string | null>(null);
 
-
-
-  addMessageParent(message: string, messageTopic: string, position: Coordinates) {
+  addMessageParent(
+    message: string,
+    messageTopic: string,
+    position: Coordinates
+  ) {
     const id = this.generateId();
     const messageCard: MessageCard = {
       messageTopic,
       message,
       id,
       position,
-      parentId: null
-    }
-    this.messageMap.set(id, messageCard);
+      parentId: null,
+    };
+    this.messageMap.set(id, []);
     this.messages.push(messageCard);
     this.layoutService.occupiedPositions.add(JSON.stringify(position));
   }
 
-  addMessageChild(message: string, messageTopic: string, parentId: string, position: Coordinates){
+  addMessageChild(
+    message: string,
+    messageTopic: string,
+    parentId: string,
+    position: Coordinates
+  ) {
     const id = this.generateId();
     const messageCard: MessageCard = {
       messageTopic,
       message,
       id,
       position,
-      parentId
-    }
-    this.messageMap.set(id, messageCard);
+      parentId,
+    };
+    const parentMessages = this.messageMap.get(parentId);
+    parentMessages?.push(messageCard);
     this.messages.push(messageCard);
     this.layoutService.occupiedPositions.add(JSON.stringify(position));
   }
-  
 
   generateId(): string {
     return Math.random().toString(36);
   }
 
-  onMessageReceived(message: string){
+  onMessageReceived(message: string) {
     let currentValue = this.activeMessageId.getValue();
     let newPos = this.layoutService.calculateInitialPositionParent();
-
-
-    if(this.activeMessageId && currentValue){
-      const parentMessage = this.messageMap.get(currentValue)
-      if(parentMessage){
-        const availablePos = this.layoutService.getAvailablePositions(parentMessage?.position);
-        console.log("Available positions:",availablePos)
-        if(availablePos.length > 0){
-          const randomIndex = Math.floor(Math.random() * availablePos?.length);
-          newPos = availablePos[randomIndex];
+  
+    if (this.activeMessageId && currentValue) {
+      const parentMessages = this.messageMap.get(currentValue);
+      if (parentMessages) {
+        for (let i = 0; i < parentMessages.length; i++) {
+          const availablePos = this.layoutService.getAvailablePositions(parentMessages[i]?.position);
+          console.log('Available positions:', availablePos);
+          if (availablePos.length > 0) {
+            const randomIndex = Math.floor(Math.random() * availablePos?.length);
+            newPos = availablePos[randomIndex];
+            break; // break the loop as soon as an available position is found
+          }
         }
       }
     }
-   this.activeMessageId? this.addMessageChild(message, 'AI', currentValue ? currentValue : "", newPos) : this.addMessageParent(message, 'AI', newPos);
+  
+    this.activeMessageId
+      ? this.addMessageChild(
+          message,
+          'AI',
+          currentValue ? currentValue : '',
+          newPos
+        )
+      : this.addMessageParent(message, 'AI', newPos);
   }
-
-
-
 }
