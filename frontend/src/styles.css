@@ -34,7 +34,10 @@ time, mark, audio, video {
 
 }
 
-body{
-    overflow: visible;
+html, body{
+    overflow:visible;
+    height:100%;
 }
+
+
 

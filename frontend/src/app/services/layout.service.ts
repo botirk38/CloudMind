@@ -36,40 +36,71 @@ export class LayoutService {
   }
 
   calculateInitialPositionParent(): Coordinates {
-    let initialXPos = this.getTextBoxPosition().x + this.getTextBoxSize().width + this.averageMessageSize.x;
-    let initialYPos = this.getTextBoxPosition().y;
+    let initialXPos = this.getTextBoxPosition().x;
+    let initialYPos = this.getTextBoxPosition().y - this.averageMessageSize.y;
     const result = [];
     const maxIterations = 1000;
     let iterations = 0;
-  
-    for (let xPos = initialXPos; iterations < maxIterations && result.length < 10; xPos += this.averageMessageSize.x) {
-        for (let yPos = initialYPos; yPos <= this.getTextBoxPosition().y + this.getTextBoxSize().height && result.length < 10; yPos += this.averageMessageSize.y) {
-            if (this.isPositionAvailable({ x: xPos, y: yPos })) {
-                result.push({ x: xPos, y: yPos });
-            }
-            iterations++;
-            if (iterations >= maxIterations) break;
-        }
-    }
-  
-    console.log(result);
-    if (result.length > 0) {
-        const randomIndex = Math.floor(Math.random() * result.length);
-        console.log(result[randomIndex]);
-        return result[randomIndex];
-    } else {
-        console.log("No position found");
-        return {x: 100, y:100}; // Or some default value
-    }
-}
 
+    for (
+      let yPos = initialYPos;
+      iterations < maxIterations && result.length < 10;
+      yPos -= this.averageMessageSize.y
+    ) {
+      for (
+        let xPos = initialXPos;
+        xPos <= this.getTextBoxPosition().x + this.getTextBoxSize().width &&
+        result.length < 10;
+        xPos += this.averageMessageSize.x
+      ) {
+        const availablePositions = this.getAvailablePositions({
+          x: xPos,
+          y: yPos,
+        });
+        result.push(...availablePositions);
+        iterations++;
+        if (iterations >= maxIterations) break;
+      }
+    }
+
+    console.log(result);
+
+    if (result.length > 0) {
+      result.sort((a, b) => {
+        const distanceA = Math.sqrt(
+          Math.pow(a.x - this.getTextBoxPosition().x, 2) +
+            Math.pow(a.y - this.getTextBoxPosition().y, 2)
+        );
+        const distanceB = Math.sqrt(
+          Math.pow(b.x - this.getTextBoxPosition().x, 2) +
+            Math.pow(b.y - this.getTextBoxPosition().y, 2)
+        );
+        return distanceA - distanceB;
+      });
+      const randomIndex = Math.floor(
+        Math.random() * Math.floor(result.length / 2)
+      );
+      return result[randomIndex];
+    } else {
+      console.log('No position found');
+      return { x: 100, y: 100 }; // Or some default value
+    }
+  }
 
   isPositionAvailable(position: Coordinates): boolean {
-    return !this.occupiedPositions.has(JSON.stringify(position));
+    return (
+      !this.occupiedPositions.has(JSON.stringify(position)) &&
+      (position.x >=
+        this.getTextBoxPosition().x + this.getTextBoxSize().width ||
+        position.y >=
+          this.getTextBoxPosition().y + this.getTextBoxSize().height ||
+        position.x + this.averageMessageSize.x <= this.getTextBoxPosition().x ||
+        position.y + this.averageMessageSize.y <= this.getTextBoxPosition().y)
+    );
   }
 
   getAvailablePositions(position: { x: number; y: number }): Coordinates[] {
-    const gapSize = 200;
+    const gapSize = 100;
     const directions = [
       { x: this.averageMessageSize.x + gapSize, y: 0 }, // Right
       { x: -this.averageMessageSize.x - gapSize, y: 0 }, // Left
