@@ -128,7 +128,7 @@ export class LayoutService {
       controlY = Math.min(startY, endY) - 10; // Slight curve upward
     }
 
-    const d = `M ${startX} ${startY} Q ${controlX} ${controlY}, ${endX} ${endY}`; // Simple line path; replace with a curve if needed
+    const d = `M ${startX} ${startY} Q ${controlX} ${controlY}, ${endX} ${endY}`; 
     path.setAttribute('d', d);
     path.setAttribute('stroke', 'black');
     path.setAttribute('fill', 'none');
