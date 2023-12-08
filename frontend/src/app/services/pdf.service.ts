@@ -6,9 +6,14 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class PdfService {
-  private backendUrl = 'http://localhost:8080/upload'; // Replace with your backend URL
+  private backendUrl = 'http://localhost:8080/upload';
+  
 
   constructor(private http: HttpClient) {}
+
+  getBackendUrl(): string {
+    return this.backendUrl;
+  }
 
   sendPdfToBackend(file: File): Observable<any> {
     const formData = new FormData();

@@ -29,7 +29,6 @@ export class MessageService {
     };
     this.messageMap.set(id, []);
     this.messages.push(messageCard);
-    this.layoutService.occupiedPositions.add(JSON.stringify(position));
   }
 
   addMessageChild(
@@ -49,7 +48,6 @@ export class MessageService {
     const parentMessages = this.messageMap.get(parentId);
     parentMessages?.push(messageCard);
     this.messages.push(messageCard);
-    this.layoutService.occupiedPositions.add(JSON.stringify(position));
   }
 
   generateId(): string {
@@ -57,31 +55,8 @@ export class MessageService {
   }
 
   onMessageReceived(message: string) {
-    let currentValue = this.activeMessageId.getValue();
-    let newPos = this.layoutService.calculateInitialPositionParent();
-  
-    if (this.activeMessageId && currentValue) {
-      const parentMessages = this.messageMap.get(currentValue);
-      if (parentMessages) {
-        for (let i = 0; i < parentMessages.length; i++) {
-          const availablePos = this.layoutService.getAvailablePositions(parentMessages[i]?.position);
-          console.log('Available positions:', availablePos);
-          if (availablePos.length > 0) {
-            const randomIndex = Math.floor(Math.random() * availablePos?.length);
-            newPos = availablePos[randomIndex];
-            break; // break the loop as soon as an available position is found
-          }
-        }
-      }
-    }
-  
-    this.activeMessageId
-      ? this.addMessageChild(
-          message,
-          'AI',
-          currentValue ? currentValue : '',
-          newPos
-        )
-      : this.addMessageParent(message, 'AI', newPos);
+   const newPos = this.layoutService.calculatePosition();
+
+   this.addMessageParent(message, "user", newPos)
   }
 }

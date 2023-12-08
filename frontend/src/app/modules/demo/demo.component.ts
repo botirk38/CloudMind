@@ -24,8 +24,7 @@ export class DemoComponent implements OnInit {
 
   ngOnInit(): void {
     this.messages = [];
-    this.initializeSamplePdf();
-    
+    this.initializeSamplePdf();    
   }
 
   initializeSamplePdf(): void {
