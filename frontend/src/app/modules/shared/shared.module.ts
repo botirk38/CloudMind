@@ -9,6 +9,7 @@ import { CardModule } from 'primeng/card';
 import { CardComponent } from './card/card.component';
 import { ButtonModule } from 'primeng/button';
 import { ScrollPanelModule } from 'primeng/scrollpanel';
+import { ToolbarComponent } from './toolbar/toolbar.component';
 
 
 
@@ -18,7 +19,8 @@ import { ScrollPanelModule } from 'primeng/scrollpanel';
     VideoComponent,
     ChatComponent,
     MessageBoxComponent,
-    CardComponent
+    CardComponent,
+    ToolbarComponent
   ],
   imports: [
     CommonModule,

@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Coordinates } from '../models/MessageCard';
+import * as d3 from 'd3';
 
 @Injectable({
   providedIn: 'root',
@@ -10,7 +11,7 @@ export class LayoutService {
   textBoxSize = { width: 0, height: 0 };
   lastMessagePosition: Coordinates = { x: 900, y: 625 };
   isFirstMessage: boolean = true;
-  messageLines: SVGPathElement[] = []; // Array to track lines for each message
+  messageLines: SVGPathElement[] | null = []; // Array to track lines for each message
 
   // Stack to track message positions
   messageStack: Coordinates[] = [];
@@ -41,11 +42,19 @@ export class LayoutService {
   }
 
   calculatePosition(): Coordinates {
+    const MESSAGE_POSITION_INCREMENT = 50;
     // Move existing messages up
-    for (let i = 0; i < this.messageStack.length; i++) {
-      this.messageStack[i].y -= this.averageMessageSize.y + 30;
-      if (this.messageLines[i]) {
-        this.updateLinePosition(this.messageLines[i], this.messageStack[i], i);
+    if (this.messageLines) {
+      for (let i = 0; i < this.messageStack.length; i++) {
+        this.messageStack[i].y -=
+          this.averageMessageSize.y + MESSAGE_POSITION_INCREMENT;
+        if (this.messageLines[i] !== null) {
+          this.updateLinePosition(
+            this.messageLines[i],
+            this.messageStack[i],
+            i
+          );
+        }
       }
     }
 
@@ -54,7 +63,7 @@ export class LayoutService {
       ? { ...this.lastMessagePosition }
       : {
           x: this.lastMessagePosition.x,
-          y: this.lastMessagePosition.y - 30,
+          y: this.lastMessagePosition.y - MESSAGE_POSITION_INCREMENT,
         };
 
     // Add new message to the stack
@@ -62,20 +71,19 @@ export class LayoutService {
 
     // Draw line to the new message
     const newLine = this.drawLineToMessage(newPosition);
-    this.messageLines.push(newLine);
+    if (newLine) {
+      this.messageLines?.push(newLine);
+    }
 
     // Update lastMessagePosition for the next message, but only if it's not the first message
-    if (!this.isFirstMessage) {
-      this.lastMessagePosition.y += 30;
-    } else {
-      this.isFirstMessage = false;
-    }
+    this.lastMessagePosition.y += MESSAGE_POSITION_INCREMENT;
+    this.isFirstMessage = false;
 
     // Return the position for the new message
     return newPosition;
   }
 
-  drawLineToMessage(newPosition: Coordinates): SVGPathElement {
+  drawLineToMessage(newPosition: Coordinates): SVGPathElement | null {
     const textBoxPosition = this.getTextBoxPosition();
     const textBoxSize = this.getTextBoxSize();
 
@@ -107,42 +115,52 @@ export class LayoutService {
     const endX = newPosition.x;
     const endY = newPosition.y + this.averageMessageSize.y / 2;
 
-    return this.createPath(startX, startY, endX, endY);
+    return this.createPath(startX, startY, endX, endY, isAtSameLevel);
   }
 
   createPath(
     startX: number,
     startY: number,
     endX: number,
-    endY: number
-  ): SVGPathElement {
-    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-    const controlX = (startX + endX) / 2;
+    endY: number,
+    isAtSameLevel: boolean
+  ): SVGPathElement | null {
+    let controlX;
     let controlY;
-
-    if (endY > startY && Math.abs(endY - startY) > 30) {
-      // Message is below
-      controlY = Math.max(startY, endY) + 10; // Slight curve downward
+    if (isAtSameLevel) {
+      console.log("isAtSameLevel");
+      // For a straight line, control point is in the middle between start and end points
+      controlX = (startX + endX) / 2;
+      controlY = (startY + endY) / 2; // Keeping Y same as start and end for a straight line
     } else {
-      // Message is above
-      controlY = Math.min(startY, endY) - 10; // Slight curve upward
+      controlX = (startX + endX) / 2;
+      if (endY > startY && Math.abs(endY - startY) > 30) {
+        controlY = Math.max(startY, endY) + 10; // Slight curve downward
+      } else {
+        controlY = Math.min(startY, endY) - 10; // Slight curve upward
+      }
     }
 
-    const d = `M ${startX} ${startY} Q ${controlX} ${controlY}, ${endX} ${endY}`; 
-    path.setAttribute('d', d);
-    path.setAttribute('stroke', 'black');
-    path.setAttribute('fill', 'none');
+    // Create SVG and Path using D3
+    const svg = d3
+      .select(document.body)
+      .append('svg')
+      .attr('width', '100%')
+      .attr('height', '100%')
+      .style('position', 'absolute')
+      .style('top', '0')
+      .style('left', '0');
 
-    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    svg.setAttribute('width', '100%');
-    svg.setAttribute('height', '100%');
-    svg.style.position = 'absolute';
-    svg.style.top = '0';
-    svg.style.left = '0';
-    svg.appendChild(path);
-    document.body.appendChild(svg);
+    const path = svg
+      .append('path')
+      .attr(
+        'd',
+        `M ${startX} ${startY} Q ${controlX} ${controlY}, ${endX} ${endY}`
+      )
+      .attr('stroke', 'black')
+      .attr('fill', 'none');
 
-    return path;
+    return path.node();
   }
 
   updateLinePosition(
@@ -179,8 +197,32 @@ export class LayoutService {
       controlY = Math.min(startY, endY) - 20;
     }
 
-    const d = `M ${startX} ${startY} Q ${controlX} ${controlY}, ${messagePosition.x} ${endY}`;
-    path.setAttribute('d', d);
+    d3.select(path).attr(
+      'd',
+      `M ${startX} ${startY} Q ${controlX} ${controlY}, ${messagePosition.x} ${endY}`
+    );
+  }
+
+  zoomIn(): void {
+    const zoomContainer = document.getElementById('zoomContainer');
+    if (zoomContainer) {
+      const currentScale =
+        parseFloat(
+          zoomContainer.style.transform.replace('scale(', '').replace(')', '')
+        ) || 1;
+      zoomContainer.style.transform = `scale(${currentScale + 0.1})`;
+    }
+  }
+
+  zoomOut(): void {
+    const zoomContainer = document.getElementById('zoomContainer');
+    if (zoomContainer) {
+      const currentScale =
+        parseFloat(
+          zoomContainer.style.transform.replace('scale(', '').replace(')', '')
+        ) || 1;
+      zoomContainer.style.transform = `scale(${currentScale - 0.1})`;
+    }
   }
 
   // Method to reset message stack
