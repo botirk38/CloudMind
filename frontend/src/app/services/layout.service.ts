@@ -8,8 +8,10 @@ export class LayoutService {
   averageMessageSize = { x: 400, y: 272 };
   textBoxPosition = { x: 0, y: 0 };
   textBoxSize = { width: 0, height: 0 };
-  lastMessagePosition: Coordinates = { x: 900, y: 300 };
+  lastMessagePosition: Coordinates = { x: 900, y: 625};
   isFirstMessage: boolean = true;
+  messageLines: SVGLineElement[] = []; // Array to track lines for each message
+
 
   // Stack to track message positions
   messageStack: Coordinates[] = [];
@@ -41,27 +43,32 @@ export class LayoutService {
 
   calculatePosition(): Coordinates {
     // Move existing messages up
-    this.messageStack.forEach((pos, index) => {
-      this.messageStack[index] = { x: pos.x, y: pos.y - this.averageMessageSize.y - 20 };
-    });
+    for (let i = 0; i < this.messageStack.length; i++) {
+      this.messageStack[i].y -= this.averageMessageSize.y + 10;
+      if (this.messageLines[i]) {
+        this.updateLinePosition(this.messageLines[i], this.messageStack[i]);
+      }
+    }
 
     // Calculate position for the new message
     const newPosition: Coordinates = this.isFirstMessage
       ? { ...this.lastMessagePosition }
       : {
           x: this.lastMessagePosition.x,
-          y: this.lastMessagePosition.y + this.averageMessageSize.y + 20
+          y: this.lastMessagePosition.y  - 10,
         };
 
     // Add new message to the stack
     this.messageStack.push(newPosition);
 
     // Draw line to the new message
-    this.drawLineToMessage(newPosition);
+    const newLine = this.drawLineToMessage(newPosition);
+    this.messageLines.push(newLine);
+
 
     // Update lastMessagePosition for the next message, but only if it's not the first message
     if (!this.isFirstMessage) {
-      this.lastMessagePosition.y += this.averageMessageSize.y + 20;
+      this.lastMessagePosition.y += 50;
     } else {
       this.isFirstMessage = false;
     }
@@ -70,24 +77,41 @@ export class LayoutService {
     return newPosition;
 }
 
-drawLineToMessage(newPosition: Coordinates): void {
+drawLineToMessage(newPosition: Coordinates): SVGLineElement {
   const textBoxPosition = this.getTextBoxPosition();
   const textBoxSize = this.getTextBoxSize();
 
-  // Start Y - Bottom of the textbox or the top, based on the message position
-  const startY = newPosition.y < textBoxPosition.y 
-                 ? textBoxPosition.y 
-                 : textBoxPosition.y + textBoxSize.height;
+  let startX: number;
+  let startY: number;
 
+  // Determine if the Y position of the message is close to that of the textbox
+  const isYPositionClose = Math.abs(newPosition.y - textBoxPosition.y) < this.averageMessageSize.y;
+  console.log("New Position: " + newPosition.y);
+  console.log(" Distance from textbox",Math.abs(newPosition.y - textBoxPosition.y));
+  console.log(" Condition:" ,this.averageMessageSize.y / 2);
+
+  if (isYPositionClose) {
+      // If Y positions are close, start from the right middle of the textbox
+      startX = textBoxPosition.x + textBoxSize.width + 10;
+      startY = textBoxPosition.y + textBoxSize.height / 2;
+  } else {
+      // Otherwise, start from either the top or bottom middle of the textbox
+      startX = textBoxPosition.x + textBoxSize.width / 2;
+      startY = newPosition.y < textBoxPosition.y 
+               ? textBoxPosition.y 
+               : textBoxPosition.y + textBoxSize.height;
+  }
+
+  // End Y - Adjust to connect to the middle of the message box
   const endY = newPosition.y + this.averageMessageSize.y / 2;
 
-  this.createLine(textBoxPosition.x + textBoxSize.width / 2, startY, newPosition.x, endY);
+  const line = this.createLine(startX, startY, newPosition.x, endY);
+
+  return line;
 }
 
 
-
-
-  createLine(x1: number, y1: number, x2: number, y2: number): void {
+  createLine(x1: number, y1: number, x2: number, y2: number): SVGLineElement {
     const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     svg.setAttribute('width', '100%');
     svg.setAttribute('height', '100%');
@@ -105,6 +129,14 @@ drawLineToMessage(newPosition: Coordinates): void {
     svg.appendChild(line);
 
     document.body.appendChild(svg);
+
+    return line;
+  }
+
+  updateLinePosition(line: SVGLineElement, messagePosition: Coordinates): void {
+    // Update line's end position based on the message's new position
+    const endY = messagePosition.y + this.averageMessageSize.y / 2;
+    line.setAttribute('y2', endY.toString());
   }
 
   // Method to reset message stack
