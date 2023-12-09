@@ -13,9 +13,10 @@ export class LayoutService {
   lastMessagePosition: Coordinates = { x: 570, y: 625 };
   isFirstMessage: boolean = true;
   messageLines: SVGPathElement[] | null = []; // Array to track lines for each message
-  MESSAGE_POSITION_INCREMENT = 50;
+  MESSAGE_POSITION_INCREMENT = 150;
 
-  constructor(private domService: DOMService, private d3Service: D3Service) {}
+  constructor(private domService: DOMService, private d3Service: D3Service) {
+  }
 
   // Stack to track message positions
   messageStack: Coordinates[] = [];
@@ -54,6 +55,7 @@ export class LayoutService {
     // Assuming some offset from the text box for the first message
     const xOffset = 20; // This can be adjusted as needed
     const yOffset = 20; // This can be adjusted as needed
+    this.d3Service.updateSvgSize(this.MESSAGE_POSITION_INCREMENT);
 
     return {
       x: this.textBoxPosition.x + this.textBoxSize.width + xOffset,
@@ -86,9 +88,12 @@ export class LayoutService {
     }
 
     const newPosition = { ...this.lastMessagePosition };
+    console.log('New position:', newPosition);
 
-    if (newPosition.y >= window.innerHeight) {
-      this.shiftMessagesDown(window.innerHeight - newPosition.y);
+    if (newPosition.y < 400) {
+      this.shiftMessagesDown(newPosition.y * 2);
+      this.d3Service.updateSvgSize(this.MESSAGE_POSITION_INCREMENT)
+      console.log("Shifting messages down")
     }
 
     this.messageStack.push(newPosition);

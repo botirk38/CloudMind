@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { PdfService } from 'src/app/services/pdf.service';
 import { MessageService } from 'src/app/services/message.service';
 import { MessageCard } from 'src/app/models/MessageCard';
+import { D3Service } from 'src/app/services/d3.service';
 
 export interface Message {
   text: string;
@@ -24,7 +25,7 @@ export class DemoComponent implements OnInit {
 
   ngOnInit(): void {
     this.messages = [];
-    this.initializeSamplePdf();    
+    this.initializeSamplePdf(); 
   }
 
   initializeSamplePdf(): void {
