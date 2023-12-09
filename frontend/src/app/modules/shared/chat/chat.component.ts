@@ -11,7 +11,11 @@ import { LayoutService } from 'src/app/services/layout.service';
 export class ChatComponent implements AfterViewInit {
 
   @Input() message: string | undefined;
+
   @Output() messageChange = new EventEmitter<string>();
+  @Output() buttonClicked = new EventEmitter<string>();
+
+
   showButtons = false;
 
   constructor(private layoutService:LayoutService) { }
@@ -30,6 +34,12 @@ export class ChatComponent implements AfterViewInit {
       this.message = '';
       this.showButtons = true;
     }
+  }
+
+  buttonClick(buttonName: string): void {
+    console.log("Button clicked: " + buttonName);
+    this.buttonClicked.emit(buttonName);
+    this.showButtons = false;
   }
 
 
