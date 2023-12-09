@@ -1,11 +1,11 @@
 <section>
 
     <div class="text-box-container">
-        <button mat-mini-fab class="left-button">
+        <button mat-mini-fab class="left-button" [class.hidden]="!showButtons">
             <mat-icon>add</mat-icon>
         </button>
 
-        <button mat-mini-fab class="right-button">
+        <button mat-mini-fab class="right-button" [class.hidden]="!showButtons">
             <mat-icon>add</mat-icon>
         </button>
 

@@ -31,6 +31,10 @@ section {
     background-color: #4895ef;
 }
 
+.hidden{
+    display: none;
+}
+
 .right-button, .left-button > *{
     color:white;
 }
