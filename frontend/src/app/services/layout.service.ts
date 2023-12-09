@@ -13,7 +13,7 @@ export class LayoutService {
   lastMessagePosition: Coordinates = { x: 570, y: 625 };
   isFirstMessage: boolean = true;
   messageLines: SVGPathElement[] | null = []; // Array to track lines for each message
-  MESSAGE_POSITION_INCREMENT = 150;
+  MESSAGE_POSITION_INCREMENT = 100;
 
   constructor(private domService: DOMService, private d3Service: D3Service) {
   }
@@ -84,17 +84,14 @@ export class LayoutService {
         }
       }
 
-      this.lastMessagePosition.y -= this.MESSAGE_POSITION_INCREMENT;
+      this.lastMessagePosition.y += this.MESSAGE_POSITION_INCREMENT;
     }
 
     const newPosition = { ...this.lastMessagePosition };
     console.log('New position:', newPosition);
 
-    if (newPosition.y < 400) {
-      this.shiftMessagesDown(newPosition.y * 2);
-      this.d3Service.updateSvgSize(this.MESSAGE_POSITION_INCREMENT)
-      console.log("Shifting messages down")
-    }
+    this.shiftMessagesDown(this.MESSAGE_POSITION_INCREMENT);
+    this.d3Service.updateSvgSize(this.MESSAGE_POSITION_INCREMENT);
 
     this.messageStack.push(newPosition);
 
@@ -107,6 +104,8 @@ export class LayoutService {
     if (newLine) {
       this.messageLines?.push(newLine);
     }
+
+
 
     return newPosition;
   }
