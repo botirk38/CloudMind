@@ -20,7 +20,7 @@ export class D3Service {
     // Determine if the message is at the same vertical level as the textbox
     const isAtSameLevel =
       Math.abs(textBoxMiddleY - messageMiddleY) <=
-      averageMessageSize.y / 4;
+      averageMessageSize.y;
 
     if (isAtSameLevel) {
       // Start from the right middle of the textbox

@@ -2,7 +2,7 @@ section {
     position: absolute;
     width: 300px;       /* Fixed width */
     height: 150px;      /* Fixed height */
-    top: 100%;           /* Center vertically */
+    top: 50%;           /* Center vertically */
     left: 50%;          /* Center horizontally */
     transform: translate(-50%, -50%); /* Adjust for the element's dimensions */
     z-index: 100;       /* Ensure it's above other elements if necessary */

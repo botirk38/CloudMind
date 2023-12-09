@@ -7,16 +7,17 @@ import { D3Service } from './d3.service';
   providedIn: 'root',
 })
 export class LayoutService {
-  averageMessageSize = { x: 400, y: 272 };
+  averageMessageSize = { x: 400, y: 150 };
   textBoxPosition = { x: 0, y: 0 };
   textBoxSize = { width: 0, height: 0 };
   lastMessagePosition: Coordinates = { x: 570, y: 625 };
   isFirstMessage: boolean = true;
   messageLines: SVGPathElement[] | null = []; // Array to track lines for each message
-  MESSAGE_POSITION_INCREMENT = 100;
+  MESSAGE_POSITION_INCREMENT = 150;
 
   constructor(private domService: DOMService, private d3Service: D3Service) {
   }
+
 
   // Stack to track message positions
   messageStack: Coordinates[] = [];
@@ -54,7 +55,7 @@ export class LayoutService {
   calculateInitialMessagePosition(): Coordinates {
     // Assuming some offset from the text box for the first message
     const xOffset = 20; // This can be adjusted as needed
-    const yOffset = 20; // This can be adjusted as needed
+    const yOffset = -50; // This can be adjusted as needed
     this.d3Service.updateSvgSize(this.MESSAGE_POSITION_INCREMENT);
 
     return {
@@ -84,13 +85,13 @@ export class LayoutService {
         }
       }
 
-      this.lastMessagePosition.y += this.MESSAGE_POSITION_INCREMENT;
+      this.lastMessagePosition.y -= this.MESSAGE_POSITION_INCREMENT;
     }
 
     const newPosition = { ...this.lastMessagePosition };
     console.log('New position:', newPosition);
 
-    this.shiftMessagesDown(this.MESSAGE_POSITION_INCREMENT);
+    this.shiftMessagesDown(this.MESSAGE_POSITION_INCREMENT + this.averageMessageSize.y);
     this.d3Service.updateSvgSize(this.MESSAGE_POSITION_INCREMENT);
 
     this.messageStack.push(newPosition);
