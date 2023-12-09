@@ -11,7 +11,8 @@ export class LayoutService {
   textBoxPosition = { x: 0, y: 0 };
   textBoxSize = { width: 0, height: 0 };
   lastMessagePosition: Coordinates = { x: 570, y: 625 };
-  isFirstMessage: boolean = true;
+  cardsOnLeft: number = 0;
+  cardsOnRight: number = 0;
   messageLines: SVGPathElement[] | null = []; // Array to track lines for each message
   MESSAGE_POSITION_INCREMENT = 150;
 
@@ -52,22 +53,28 @@ export class LayoutService {
     return this.textBoxSize;
   }
 
-  calculateInitialMessagePosition(): Coordinates {
+  calculateInitialMessagePosition(buttonClicked: string): Coordinates {
     // Assuming some offset from the text box for the first message
-    const xOffset = 20; // This can be adjusted as needed
+    const xOffset = 400; // This can be adjusted as needed
     const yOffset = -50; // This can be adjusted as needed
     this.d3Service.updateSvgSize(this.MESSAGE_POSITION_INCREMENT);
-
+  
+    let x = 0;
+    if (buttonClicked === 'left-button') {
+      x = this.textBoxPosition.x - xOffset;
+    } else if (buttonClicked === 'right-button') {
+      x = this.textBoxPosition.x + this.textBoxSize.width + xOffset;
+    }
+  
     return {
-      x: this.textBoxPosition.x + this.textBoxSize.width + xOffset,
+      x: x,
       y: this.textBoxPosition.y + yOffset,
     };
   }
 
-  calculatePosition(): Coordinates {
-    if (this.isFirstMessage) {
-      this.lastMessagePosition = this.calculateInitialMessagePosition();
-      this.isFirstMessage = false;
+  calculatePosition(buttonClicked: string): Coordinates {
+    if (this.cardsOnLeft === 0 || this.cardsOnRight === 0) {
+      this.lastMessagePosition = this.calculateInitialMessagePosition(buttonClicked);
     } else {
       for (let i = 0; i < this.messageStack.length; i++) {
         this.messageStack[i].y -=
@@ -79,7 +86,8 @@ export class LayoutService {
               this.messageStack[i],
               this.textBoxPosition,
               this.textBoxSize,
-              this.averageMessageSize
+              this.averageMessageSize,
+              buttonClicked
             );
           }
         }
@@ -91,7 +99,7 @@ export class LayoutService {
     const newPosition = { ...this.lastMessagePosition };
     console.log('New position:', newPosition);
 
-    this.shiftMessagesDown(this.MESSAGE_POSITION_INCREMENT + this.averageMessageSize.y);
+    this.shiftMessagesDown(this.MESSAGE_POSITION_INCREMENT + this.averageMessageSize.y, buttonClicked);
     this.d3Service.updateSvgSize(this.MESSAGE_POSITION_INCREMENT);
 
     this.messageStack.push(newPosition);
@@ -100,7 +108,8 @@ export class LayoutService {
       newPosition,
       this.textBoxPosition,
       this.textBoxSize,
-      this.averageMessageSize
+      this.averageMessageSize,
+      buttonClicked
     );
     if (newLine) {
       this.messageLines?.push(newLine);
@@ -111,7 +120,7 @@ export class LayoutService {
     return newPosition;
   }
 
-  shiftMessagesDown(shiftAmount: number) {
+  shiftMessagesDown(shiftAmount: number, buttonClicked: string) {
     for (let i = 0; i < this.messageStack.length; i++) {
       this.messageStack[i].y += shiftAmount + this.MESSAGE_POSITION_INCREMENT;
       if (this.messageLines !== null) {
@@ -121,7 +130,8 @@ export class LayoutService {
             this.messageStack[i],
             this.textBoxPosition,
             this.textBoxSize,
-            this.averageMessageSize
+            this.averageMessageSize,
+            buttonClicked
           );
         }
       }

@@ -54,9 +54,10 @@ export class MessageService {
     return Math.random().toString(36);
   }
 
-  onMessageReceived(message: string) {
-   const newPos = this.layoutService.calculatePosition();
+  onMessageReceived(buttonClicked: string) {
+  
+   const newPos = this.layoutService.calculatePosition(buttonClicked);
 
-   this.addMessageParent(message, "user", newPos)
+   this.addMessageParent(buttonClicked, "user", newPos)
   }
 }

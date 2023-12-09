@@ -3,14 +3,18 @@ import { Coordinates } from '../models/MessageCard';
 import * as d3 from 'd3';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class D3Service {
+  constructor() {}
 
-  constructor() { }
-
-  drawLineToMessage(newPosition: Coordinates, textBoxPosition: Coordinates, textBoxSize: {width: number, height:number}, averageMessageSize: {x: number, y: number}): SVGPathElement | null {
-
+  drawLineToMessage(
+    newPosition: Coordinates,
+    textBoxPosition: Coordinates,
+    textBoxSize: { width: number; height: number },
+    averageMessageSize: { x: number; y: number },
+    buttonClicked: string
+  ): SVGPathElement | null {
     let startX: number;
     let startY: number;
 
@@ -19,8 +23,7 @@ export class D3Service {
 
     // Determine if the message is at the same vertical level as the textbox
     const isAtSameLevel =
-      Math.abs(textBoxMiddleY - messageMiddleY) <=
-      averageMessageSize.y;
+      Math.abs(textBoxMiddleY - messageMiddleY) <= averageMessageSize.y;
 
     if (isAtSameLevel) {
       // Start from the right middle of the textbox
@@ -36,29 +39,40 @@ export class D3Service {
     }
 
     // End Y - Adjust to connect to the middle of the message box
-    const endX = newPosition.x;
+    let endX: number = 0;
+
+    if (buttonClicked === 'left-button') {
+      endX = newPosition.x + textBoxSize.width + 20;
+    } else {
+      endX = newPosition.x;
+    }
+
     const endY = newPosition.y + averageMessageSize.y / 2;
 
-    return this.createPath(startX, startY, endX, endY, isAtSameLevel);
+    return this.createPath(startX, startY, endX, endY, isAtSameLevel, buttonClicked);
   }
 
-  
   createPath(
     startX: number,
     startY: number,
     endX: number,
     endY: number,
-    isAtSameLevel: boolean
+    isAtSameLevel: boolean,
+    buttonClicked: string
   ): SVGPathElement | null {
     let controlX;
     let controlY;
     if (isAtSameLevel) {
-      console.log("isAtSameLevel");
+      console.log('isAtSameLevel');
       // For a straight line, control point is in the middle between start and end points
       controlX = (startX + endX) / 2;
       controlY = (startY + endY) / 2; // Keeping Y same as start and end for a straight line
     } else {
-      controlX = (startX + endX) / 2;
+      if (buttonClicked === 'left-button') {
+        controlX = startX - (startX - endX) / 2;
+      } else {
+        controlX = startX + (endX - startX) / 2;
+      }
       if (endY > startY && Math.abs(endY - startY) > 30) {
         controlY = Math.max(startY, endY) + 10; // Slight curve downward
       } else {
@@ -67,7 +81,7 @@ export class D3Service {
     }
 
     // Create SVG and Path using D3
-   const svg = d3.select('#mindMapSvg');
+    const svg = d3.select('#mindMapSvg');
 
     const path = svg
       .append('path')
@@ -86,21 +100,31 @@ export class D3Service {
     messagePosition: Coordinates,
     textBoxPosition: Coordinates,
     textBoxSize: { width: number; height: number },
-    averageMessageSize: { x: number; y: number }
-  
+    averageMessageSize: { x: number; y: number },
+    buttonClicked: string
   ): void {
-
     let startX: number;
     let startY: number;
+    let endX;
+
+    if (buttonClicked === 'left-button') {
+      endX = messagePosition.x + averageMessageSize.x;
+    } else {
+      endX = messagePosition.x;
+    }
 
     const textBoxMiddleY = textBoxPosition.y + textBoxSize.height / 2;
     const endY = messagePosition.y + averageMessageSize.y / 2;
 
-    if (Math.abs(textBoxMiddleY - endY) <= averageMessageSize.y / 4) {
-      startX = textBoxPosition.x + textBoxSize.width;
+    if (buttonClicked === 'left-button') {
+      startX = textBoxPosition.x + textBoxSize.width / 2;
+    } else {
+      startX = textBoxPosition.x + 100;
+    }
+
+    if (Math.abs(textBoxMiddleY - endY) <= averageMessageSize.y / 2) {
       startY = textBoxMiddleY;
     } else {
-      startX = textBoxPosition.x + textBoxSize.width / 2;
       startY =
         endY < textBoxPosition.y
           ? textBoxPosition.y
@@ -118,20 +142,20 @@ export class D3Service {
 
     d3.select(path).attr(
       'd',
-      `M ${startX} ${startY} Q ${controlX} ${controlY}, ${messagePosition.x} ${endY}`
+      `M ${startX} ${startY} Q ${controlX} ${controlY}, ${endX} ${endY}`
     );
   }
 
-  calculateMindMapBounds(): { width: any; height: any; } {
-    return {width: window.innerWidth, height: window.innerHeight};
+  calculateMindMapBounds(): { width: any; height: any } {
+    return { width: window.innerWidth, height: window.innerHeight };
   }
 
-  updateSvgSize(MESSAGE_POSITION_INCREMENT: number, ) : void {
-    let {width, height} = this.calculateMindMapBounds();
+  updateSvgSize(MESSAGE_POSITION_INCREMENT: number): void {
+    let { width, height } = this.calculateMindMapBounds();
 
-    width+= 1000;
-    height+= 1000;
-    MESSAGE_POSITION_INCREMENT+=100;
+    width += 1000;
+    height += 1000;
+    MESSAGE_POSITION_INCREMENT += 100;
 
     const parentContainer = document.getElementById('zoomContainer');
 
@@ -144,6 +168,5 @@ export class D3Service {
 
     svg.attr('width', width);
     svg.attr('height', height);
-
   }
 }
