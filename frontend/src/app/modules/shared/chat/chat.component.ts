@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, EventEmitter, Input, Output } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { LayoutService } from 'src/app/services/layout.service';
 
 
@@ -8,7 +8,7 @@ import { LayoutService } from 'src/app/services/layout.service';
   templateUrl: './chat.component.html',
   styleUrls: ['./chat.component.css'],
 })
-export class ChatComponent implements AfterViewInit {
+export class ChatComponent implements AfterViewInit, OnChanges {
 
   @Input() message: string | undefined;
   @Output() messageChange = new EventEmitter<string>();
@@ -19,6 +19,13 @@ export class ChatComponent implements AfterViewInit {
     this.layoutService.updateTextBoxPositionAndSize();
     console.log("Text Box Position:",this.layoutService.textBoxPosition);
     console.log("Text Box size:",this.layoutService.textBoxSize);
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    this.layoutService.updateTextBoxPositionAndSize();
+    console.log("Text Box Position:",this.layoutService.textBoxPosition);
+    console.log("Text Box size:",this.layoutService.textBoxSize);
+      
   }
 
   sendMessage(): void {

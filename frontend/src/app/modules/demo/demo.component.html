@@ -1,6 +1,6 @@
-<section id="zoomContainer">
+<section id="zoomContainer" class="mind-container">
+      <svg id="mindMapSvg" style="position: absolute; top: 0px; left: 0px; z-index: 10; width:100%; height:100%"></svg>
       <app-chat (messageChange)="messageService.onMessageReceived($event)"></app-chat>
       <app-card (messageCardUnSelected)="onMessageCardUnSelected()" (messageCardClicked)="onMessageCardClicked($event)" *ngFor="let messageCard of messageService.messages" [messageCard]="messageCard"></app-card>
-  
 
 </section>
