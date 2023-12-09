@@ -1,10 +1,20 @@
 <section>
 
-    <div class="input-box" id="textBox">
-        <span class="p-input-icon-left">
-            <i class="pi pi-search" (click)="sendMessage()"></i>
-            <input type="text" pInputText [(ngModel)]="message"  (keyup.enter)="sendMessage()"/>
-        </span>
-      </div>
+    <div class="text-box-container">
+        <button mat-mini-fab class="left-button">
+            <mat-icon>add</mat-icon>
+        </button>
+
+        <button mat-mini-fab class="right-button">
+            <mat-icon>add</mat-icon>
+        </button>
+
+        <div class="input-box" id="textBox">
+            <span class="p-input-icon-left">
+                <i class="pi pi-search" (click)="sendMessage()"></i>
+                <input type="text" pInputText [(ngModel)]="message"  (keyup.enter)="sendMessage()"/>
+            </span>
+        </div>
+    </div>
 
 </section>

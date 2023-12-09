@@ -12,3 +12,28 @@ section {
     justify-content: center;
 }
 
+.text-box-container{
+    position:relative;
+}
+
+.left-button{
+    left:-5%;
+  
+}
+
+.right-button{
+    right: -5%;
+}
+
+.right-button, .left-button{
+    position: absolute;
+    z-index: 100;
+    background-color: #4895ef;
+}
+
+.right-button, .left-button > *{
+    color:white;
+}
+
+
+

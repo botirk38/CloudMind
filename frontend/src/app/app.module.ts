@@ -5,6 +5,7 @@ import { HomeModule } from './modules/home/home.module';
 import { AppRoutingModule } from './modules/app-routing-module/app-routing.module';
 import { FormsModule } from '@angular/forms';
 import { DemoModule } from './modules/demo/demo.module';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -15,6 +16,7 @@ import { DemoModule } from './modules/demo/demo.module';
     HomeModule,
     DemoModule,
     AppRoutingModule,
+    BrowserAnimationsModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
