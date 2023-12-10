@@ -14,137 +14,76 @@ export class D3Service {
     textBoxSize: { width: number; height: number },
     averageMessageSize: { x: number; y: number },
     buttonClicked: string
-  ): SVGPathElement | null {
+): SVGPathElement | null {
     let startX: number;
     let startY: number;
+  
+    const isAbove = newPosition.y + averageMessageSize.y < textBoxPosition.y;
+    const isBelow = newPosition.y > textBoxPosition.y + textBoxSize.height;
 
-    const textBoxMiddleY = textBoxPosition.y + textBoxSize.height / 2;
-    const messageMiddleY = newPosition.y + averageMessageSize.y / 2;
-
-    // Determine if the message is at the same vertical level as the textbox
-    const isAtSameLevel =
-      Math.abs(textBoxMiddleY - messageMiddleY) <= averageMessageSize.y;
-
-    if (isAtSameLevel) {
-      // Start from the right middle of the textbox
-      startX = textBoxPosition.x + textBoxSize.width / 2;
-      startY = textBoxPosition.y + textBoxSize.height / 2;
+    if (isAbove) {
+        // Start from the top middle of the textbox
+        startX = textBoxPosition.x + textBoxSize.width / 2;
+        startY = textBoxPosition.y;
+    } else if (isBelow) {
+        // Start from the bottom middle of the textbox
+        startX = textBoxPosition.x + textBoxSize.width / 2;
+        startY = textBoxPosition.y + textBoxSize.height;
     } else {
-      // Start from either the top or bottom middle of the textbox
-      startX = textBoxPosition.x + textBoxSize.width / 2;
-      startY =
-        newPosition.y < textBoxPosition.y
-          ? textBoxPosition.y
-          : textBoxPosition.y + textBoxSize.height;
+        // Start from the middle-left or middle-right based on button clicked
+        startX = buttonClicked === 'left-button' ? textBoxPosition.x + textBoxSize.width : textBoxPosition.x;
+        startY = textBoxPosition.y + textBoxSize.height / 2;
     }
 
-    // End Y - Adjust to connect to the middle of the message box
-    let endX: number = 0;
+    // Calculate end coordinates
+    let endX = buttonClicked == "left-button" ? newPosition.x + averageMessageSize.x : newPosition.x;
+    let endY = newPosition.y + averageMessageSize.y / 2;
 
-    if (buttonClicked === 'left-button') {
-      endX = newPosition.x + textBoxSize.width + 20;
+    return this.createPath(startX, startY, endX, endY, isAbove || isBelow, buttonClicked);
+}
+
+  
+  
+
+createPath(startX: number, startY: number, endX: number, endY: number, isVertical: boolean, buttonClicked: string): SVGPathElement | null {
+  let controlX, controlY;
+
+  // Adjust these thresholds as needed to be more strict
+  const verticalThreshold = 10; // Distance from the textbox to consider vertical
+
+  if (isVertical) {
+    controlX = (startX + endX) / 2; // Midpoint between startX and endX
+
+    if (endY > startY + verticalThreshold) {
+      // Message is significantly below the textbox
+      controlY = startY + (endY - startY) / 2 + 30; // Pronounced curve downwards
+    } else if (endY < startY - verticalThreshold) {
+      // Message is significantly above the textbox
+      controlY = startY - (startY - endY) / 2 - 30; // Pronounced curve upwards
     } else {
-      endX = newPosition.x;
+      // Message is slightly above or below
+      controlY = (startY + endY) / 2; // Gentle curve
     }
-
-    const endY = newPosition.y + averageMessageSize.y / 2;
-
-    return this.createPath(startX, startY, endX, endY, isAtSameLevel, buttonClicked);
+  } else {
+    // Horizontal curve (for same level as textbox)
+    controlX = (startX + endX) / 2; // Midpoint between startX and endX
+    controlY = (startY + endY) / 2; // Midpoint between startY and endY
   }
 
-  createPath(
-    startX: number,
-    startY: number,
-    endX: number,
-    endY: number,
-    isAtSameLevel: boolean,
-    buttonClicked: string
-  ): SVGPathElement | null {
-    let controlX;
-    let controlY;
-    if (isAtSameLevel) {
-      console.log('isAtSameLevel');
-      // For a straight line, control point is in the middle between start and end points
-      controlX = (startX + endX) / 2;
-      controlY = (startY + endY) / 2; // Keeping Y same as start and end for a straight line
-    } else {
-      if (buttonClicked === 'left-button') {
-        controlX = startX - (startX - endX) / 2;
-      } else {
-        controlX = startX + (endX - startX) / 2;
-      }
-      if (endY > startY && Math.abs(endY - startY) > 30) {
-        controlY = Math.max(startY, endY) + 10; // Slight curve downward
-      } else {
-        controlY = Math.min(startY, endY) - 10; // Slight curve upward
-      }
-    }
+  // Create SVG and Path using D3
+  const svg = d3.select('#mindMapSvg');
 
-    // Create SVG and Path using D3
-    const svg = d3.select('#mindMapSvg');
+  const path = svg
+    .append('path')
+    .attr('d', `M ${startX} ${startY} Q ${controlX} ${controlY}, ${endX} ${endY}`)
+    .attr('stroke', 'black')
+    .attr('fill', 'none');
 
-    const path = svg
-      .append('path')
-      .attr(
-        'd',
-        `M ${startX} ${startY} Q ${controlX} ${controlY}, ${endX} ${endY}`
-      )
-      .attr('stroke', 'black')
-      .attr('fill', 'none');
+  return path.node();
+}
 
-    return path.node();
-  }
 
-  updateLinePosition(
-    path: SVGPathElement,
-    messagePosition: Coordinates,
-    textBoxPosition: Coordinates,
-    textBoxSize: { width: number; height: number },
-    averageMessageSize: { x: number; y: number },
-    buttonClicked: string
-  ): void {
-    let startX: number;
-    let startY: number;
-    let endX;
 
-    if (buttonClicked === 'left-button') {
-      endX = messagePosition.x + averageMessageSize.x;
-    } else {
-      endX = messagePosition.x;
-    }
-
-    const textBoxMiddleY = textBoxPosition.y + textBoxSize.height / 2;
-    const endY = messagePosition.y + averageMessageSize.y / 2;
-
-    if (buttonClicked === 'left-button') {
-      startX = textBoxPosition.x + textBoxSize.width / 2;
-    } else {
-      startX = textBoxPosition.x + 100;
-    }
-
-    if (Math.abs(textBoxMiddleY - endY) <= averageMessageSize.y / 2) {
-      startY = textBoxMiddleY;
-    } else {
-      startY =
-        endY < textBoxPosition.y
-          ? textBoxPosition.y
-          : textBoxPosition.y + textBoxSize.height;
-    }
-
-    const controlX = (startX + messagePosition.x) / 2;
-    let controlY;
-
-    if (endY > startY) {
-      controlY = Math.max(startY, endY) + 20;
-    } else {
-      controlY = Math.min(startY, endY) - 20;
-    }
-
-    d3.select(path).attr(
-      'd',
-      `M ${startX} ${startY} Q ${controlX} ${controlY}, ${endX} ${endY}`
-    );
-  }
 
   calculateMindMapBounds(): { width: any; height: any } {
     return { width: window.innerWidth, height: window.innerHeight };

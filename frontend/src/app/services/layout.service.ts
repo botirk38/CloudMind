@@ -2,23 +2,26 @@ import { Injectable } from '@angular/core';
 import { Coordinates } from '../models/MessageCard';
 import { DOMService } from './dom.service';
 import { D3Service } from './d3.service';
+import * as d3 from 'd3';
 
 @Injectable({
   providedIn: 'root',
 })
 export class LayoutService {
-  averageMessageSize = { x: 400, y: 150 };
+  averageMessageSize = { x: 320, y: 128 };
   textBoxPosition = { x: 0, y: 0 };
   textBoxSize = { width: 0, height: 0 };
   lastMessagePosition: Coordinates = { x: 570, y: 625 };
-  cardsOnLeft: number = 0;
-  cardsOnRight: number = 0;
-  messageLines: SVGPathElement[] | null = []; // Array to track lines for each message
-  MESSAGE_POSITION_INCREMENT = 150;
+  lastMessagePositionLeft: Coordinates = { x: 100, y: 290 };
+  lastMessagePositionRight: Coordinates = { x: 570, y: 625 };
+  cardsOnLeft: [Coordinates] = [{ x: 0, y: 0 }];
+  cardsOnRight: [Coordinates] = [{ x: 0, y: 0 }];
+  messageLines: SVGPathElement[] | null = [];
+  leftMessageLines: SVGPathElement[] | null = [];
+  rightMessageLines: SVGPathElement[] | null = [];
+  MESSAGE_POSITION_INCREMENT = 50;
 
-  constructor(private domService: DOMService, private d3Service: D3Service) {
-  }
-
+  constructor(private domService: DOMService, private d3Service: D3Service) {}
 
   // Stack to track message positions
   messageStack: Coordinates[] = [];
@@ -55,88 +58,78 @@ export class LayoutService {
 
   calculateInitialMessagePosition(buttonClicked: string): Coordinates {
     // Assuming some offset from the text box for the first message
-    const xOffset = 400; // This can be adjusted as needed
-    const yOffset = -50; // This can be adjusted as needed
+    const xOffset = buttonClicked == 'left-button' ? 150: 50;
+    const yOffset = -45;// This can be adjusted as needed
     this.d3Service.updateSvgSize(this.MESSAGE_POSITION_INCREMENT);
-  
-    let x = 0;
-    if (buttonClicked === 'left-button') {
-      x = this.textBoxPosition.x - xOffset;
-    } else if (buttonClicked === 'right-button') {
-      x = this.textBoxPosition.x + this.textBoxSize.width + xOffset;
-    }
-  
+
+    let x =
+      buttonClicked === 'left-button'
+        ? this.textBoxPosition.x - this.textBoxSize.width - xOffset
+        : this.textBoxPosition.x + this.textBoxSize.width + xOffset;
+
     return {
       x: x,
       y: this.textBoxPosition.y + yOffset,
     };
   }
 
+  // LayoutService
+
   calculatePosition(buttonClicked: string): Coordinates {
-    if (this.cardsOnLeft === 0 || this.cardsOnRight === 0) {
-      this.lastMessagePosition = this.calculateInitialMessagePosition(buttonClicked);
+    let isLeftSide = buttonClicked === 'left-button';
+    let lastPosition = isLeftSide ? this.lastMessagePositionLeft : this.lastMessagePositionRight;
+    let messagesToShift = isLeftSide ? this.cardsOnLeft : this.cardsOnRight;
+  
+    if (messagesToShift.length === 1) {  // if it's the first card on that side
+        lastPosition = this.calculateInitialMessagePosition(buttonClicked);
     } else {
-      for (let i = 0; i < this.messageStack.length; i++) {
-        this.messageStack[i].y -=
-          this.averageMessageSize.y + this.MESSAGE_POSITION_INCREMENT;
-        if (this.messageLines) {
-          if (this.messageLines[i]) {
-            this.d3Service.updateLinePosition(
-              this.messageLines[i],
-              this.messageStack[i],
-              this.textBoxPosition,
-              this.textBoxSize,
-              this.averageMessageSize,
-              buttonClicked
-            );
-          }
-        }
-      }
-
-      this.lastMessagePosition.y -= this.MESSAGE_POSITION_INCREMENT;
+        // Adjust the y position for the new message
+        lastPosition.y -= this.MESSAGE_POSITION_INCREMENT;
     }
-
-    const newPosition = { ...this.lastMessagePosition };
+  
+    const newPosition = { ...lastPosition };
     console.log('New position:', newPosition);
-
-    this.shiftMessagesDown(this.MESSAGE_POSITION_INCREMENT + this.averageMessageSize.y, buttonClicked);
-    this.d3Service.updateSvgSize(this.MESSAGE_POSITION_INCREMENT);
-
-    this.messageStack.push(newPosition);
-
-    const newLine = this.d3Service.drawLineToMessage(
-      newPosition,
-      this.textBoxPosition,
-      this.textBoxSize,
-      this.averageMessageSize,
-      buttonClicked
+  
+    // Shift existing messages if necessary
+    this.shiftMessagesDown(
+        this.MESSAGE_POSITION_INCREMENT + this.averageMessageSize.y,
+        messagesToShift
     );
-    if (newLine) {
-      this.messageLines?.push(newLine);
+
+    // Update the last position state
+    if (isLeftSide) {
+        this.lastMessagePositionLeft = newPosition;
+        this.cardsOnLeft.push(newPosition);
+    } else {
+        this.lastMessagePositionRight = newPosition;
+        this.cardsOnRight.push(newPosition);
     }
 
-
-
-    return newPosition;
-  }
-
-  shiftMessagesDown(shiftAmount: number, buttonClicked: string) {
-    for (let i = 0; i < this.messageStack.length; i++) {
-      this.messageStack[i].y += shiftAmount + this.MESSAGE_POSITION_INCREMENT;
-      if (this.messageLines !== null) {
-        if (this.messageLines[i] !== null) {
-          this.d3Service.updateLinePosition(
-            this.messageLines[i],
-            this.messageStack[i],
+    // Add new position to message stack and redraw lines
+    this.messageStack.push(newPosition);
+    d3.select('#mindMapSvg').selectAll('path').remove();
+    this.messageStack.forEach(position => {
+        this.d3Service.drawLineToMessage(
+            position,
             this.textBoxPosition,
             this.textBoxSize,
             this.averageMessageSize,
-            buttonClicked
-          );
-        }
-      }
-    }
+            position.x < this.textBoxPosition.x ? 'left-button' : 'right-button'
+        );
+    });
+  
+    return newPosition;
+}
+
+
+  
+
+shiftMessagesDown(shiftAmount: number, messagesToShift: Coordinates[]): void {
+  for (let i = 0; i < messagesToShift.length; i++) {
+      messagesToShift[i].y += shiftAmount;
   }
+}
+
 
   // Method to reset message stack
   resetMessageStack(): void {
