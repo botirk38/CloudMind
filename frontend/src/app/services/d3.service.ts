@@ -39,35 +39,36 @@ export class D3Service {
     let endX = buttonClicked == "left-button" ? newPosition.x + averageMessageSize.x : newPosition.x;
     let endY = newPosition.y + averageMessageSize.y / 2;
 
-    return this.createPath(startX, startY, endX, endY, isAbove || isBelow, buttonClicked);
+    return this.createPath(startX, startY, endX, endY, buttonClicked);
 }
 
   
   
 
-createPath(startX: number, startY: number, endX: number, endY: number, isVertical: boolean, buttonClicked: string): SVGPathElement | null {
+createPath(startX: number, startY: number, endX: number, endY: number, buttonClicked: string): SVGPathElement | null {
   let controlX, controlY;
 
-  // Adjust these thresholds as needed to be more strict
-  const verticalThreshold = 10; // Distance from the textbox to consider vertical
+  const textBoxMiddleY = startY; // Middle Y of the textbox
+  const messageMiddleY = endY;   // Middle Y of the message
 
-  if (isVertical) {
-    controlX = (startX + endX) / 2; // Midpoint between startX and endX
+  // Determine if the message is at the same vertical level as the textbox
+  const isAtSameLevel = Math.abs(textBoxMiddleY - messageMiddleY) < 10; // Small threshold for being at the same level
 
-    if (endY > startY + verticalThreshold) {
-      // Message is significantly below the textbox
-      controlY = startY + (endY - startY) / 2 + 30; // Pronounced curve downwards
-    } else if (endY < startY - verticalThreshold) {
-      // Message is significantly above the textbox
-      controlY = startY - (startY - endY) / 2 - 30; // Pronounced curve upwards
-    } else {
-      // Message is slightly above or below
-      controlY = (startY + endY) / 2; // Gentle curve
-    }
+  if (isAtSameLevel) {
+    // If at the same level, create a straight line
+    controlX = (startX + endX) / 2;
+    controlY = (startY + endY) / 2;
   } else {
-    // Horizontal curve (for same level as textbox)
-    controlX = (startX + endX) / 2; // Midpoint between startX and endX
-    controlY = (startY + endY) / 2; // Midpoint between startY and endY
+    // If not at the same level, create a curved line
+    controlX = (startX + endX) / 2;
+
+    if (messageMiddleY > textBoxMiddleY) {
+      // Curve downwards if the message is below the textbox
+      controlY = startY + (endY - startY) / 2 + 30;
+    } else {
+      // Curve upwards if the message is above the textbox
+      controlY = startY - (startY - endY) / 2 - 30;
+    }
   }
 
   // Create SVG and Path using D3
@@ -81,6 +82,8 @@ createPath(startX: number, startY: number, endX: number, endY: number, isVertica
 
   return path.node();
 }
+
+
 
 
 
