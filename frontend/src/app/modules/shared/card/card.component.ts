@@ -15,6 +15,7 @@ export class CardComponent {
   @Output() messageCardUnSelected = new EventEmitter<void>();
   activeMessageId: string | null = null;
   showButtons: boolean = false;
+  @Output() buttonClicked = new EventEmitter<{message: string, isChild: boolean, parentId: string | null | undefined}>();
 
   ngOnInit() {
     this.messageService.activeMessageId.subscribe((id) => {
@@ -25,15 +26,10 @@ export class CardComponent {
   
 
   onCardClick(){
-    console.log( "Message Card:" ,this.messageCard);
     if(this.messageCard){
-      console.log('activeMessageId:', this.activeMessageId);
-      console.log('messageCard id:', this.messageCard?.id);
       if(this.activeMessageId === this.messageCard?.id){
-        console.log('Emitting messageCardUnSelected event');
         this.messageCardUnSelected.emit();
       } else {
-        console.log('Emitting messageCardClicked event');
         this.messageCardClicked.emit(this.messageCard);
         this.showButtons = true;
       }
@@ -47,5 +43,6 @@ export class CardComponent {
   buttonClick(buttonName: string): void {
     console.log('Button clicked: ' + buttonName);
     this.showButtons = false;
+    this.buttonClicked.emit({message: buttonName, isChild: true, parentId: this.activeMessageId});
   }
 }

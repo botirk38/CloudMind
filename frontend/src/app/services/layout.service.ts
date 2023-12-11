@@ -1,13 +1,15 @@
 import { Injectable } from '@angular/core';
-import { Coordinates } from '../models/MessageCard';
+import { Coordinates, MessageCard } from '../models/MessageCard';
 import { DOMService } from './dom.service';
 import { D3Service } from './d3.service';
 import * as d3 from 'd3';
+import { MessageService } from './message.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class LayoutService {
+  
   averageMessageSize = { x: 320, y: 128 };
   textBoxPosition = { x: 0, y: 0 };
   textBoxSize = { width: 0, height: 0 };
@@ -120,6 +122,42 @@ export class LayoutService {
   
     return newPosition;
 }
+
+calculatePositionChild(buttonClicked: string, parentId: string | null | undefined, messageMap: Map<string|null|undefined, MessageCard>): any {
+  const parentCard = messageMap.get(parentId);
+
+  if(!parentCard) {
+    console.log("Parent card not found");
+    return null;
+  }
+  
+
+  console.log("Calculating position for child card");
+
+  const verticalOffset = 100; // Adjust this value as needed for vertical spacing
+  const horizontalOffset = 200; // Adjust this value as needed for horizontal spacing
+
+  console.log("Parent Card Siblings:" ,parentCard.siblings);
+
+  // If the bottom-button is clicked
+  if (buttonClicked === 'bottom-button' && !parentCard.siblings || parentCard.siblings?.length === 0) {
+    // Place the child directly below the parent card
+    return {
+      x: parentCard.position.x + horizontalOffset,
+      y: parentCard.position.y  + this.averageMessageSize.y + verticalOffset
+    };
+  }
+
+  // If the top-button is clicked
+  if (buttonClicked === 'top-button') {
+    // Place the child directly above the parent card
+    return {
+      x: parentCard.position.x + horizontalOffset,
+      y: parentCard.position.y - this.averageMessageSize.y - verticalOffset
+    };
+  }
+}
+
 
 
   

@@ -44,13 +44,10 @@ export class DemoComponent implements OnInit {
 
   onMessageCardClicked(messageCard: MessageCard) {
     this.messageService.activeMessageId.next(messageCard.id);
-    console.log("New message id:", this.messageService.activeMessageId.getValue());
   }
 
   onMessageCardUnSelected() {
-    console.log("Unselected");
     this.messageService.activeMessageId.next(null);
-    console.log("Demo component:", this.messageService.activeMessageId.getValue());
 
   }
 

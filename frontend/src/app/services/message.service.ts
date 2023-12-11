@@ -9,7 +9,7 @@ import { BehaviorSubject } from 'rxjs';
 export class MessageService {
   constructor(private layoutService: LayoutService) {}
 
-  messageMap: Map<string, MessageCard> = new Map();
+  messageMap: Map<string | null | undefined, MessageCard> = new Map();
   messages: MessageCard[] = [];
   averageMessageSize = { x: 400, y: 272 };
   activeMessageId = new BehaviorSubject<string | null>(null);
@@ -30,12 +30,19 @@ export class MessageService {
     };
     this.messageMap.set(id, messageCard);
     this.messages.push(messageCard);
+
+    this.messages.forEach(parent => {
+      if (parent.id !== id){
+        parent.siblings?.push(id);
+        messageCard.siblings?.push(parent.id);
+      }
+    })
   }
 
   addMessageChild(
     message: string,
     messageTopic: string,
-    parentId: string,
+    parentId: string | null | undefined,
     position: Coordinates
   ) {
     const id = this.generateId();
@@ -51,19 +58,36 @@ export class MessageService {
     const parent = this.messageMap.get(parentId);
     if (parent) {
       parent.children?.push(id);
+      messageCard.siblings = [...parent.children || []];
     }
     this.messageMap.set(id, messageCard);
     this.messages.push(messageCard);
+
+    messageCard.siblings?.forEach(siblingId => {
+      const sibling = this.messageMap.get(siblingId);
+      if (sibling) {
+        sibling.siblings?.push(id);
+      }
+    })
+
+    
   }
 
   generateId(): string {
     return Math.random().toString(36);
   }
 
-  onMessageReceived(buttonClicked: string) {
+  onMessageReceived(buttonClicked: {message: string, isChild: boolean, parentId: string | null | undefined}) {
+    console.log( "Message Card details:", buttonClicked)
+    let newPos = null;
   
-   const newPos = this.layoutService.calculatePosition(buttonClicked);
-
-   this.addMessageParent(buttonClicked, "user", newPos)
+    if (buttonClicked.isChild) {
+      console.log("Calculating position for child");
+      newPos = this.layoutService.calculatePositionChild(buttonClicked.message, buttonClicked.parentId, this.messageMap);
+      this.addMessageChild(buttonClicked.message, "user", buttonClicked?.parentId, newPos);
+    } else {
+      newPos = this.layoutService.calculatePosition(buttonClicked.message);
+      this.addMessageParent(buttonClicked.message, "user", newPos);
+    }
   }
 }

@@ -13,7 +13,7 @@ export class ChatComponent implements AfterViewInit {
   @Input() message: string | undefined;
 
   @Output() messageChange = new EventEmitter<string>();
-  @Output() buttonClicked = new EventEmitter<string>();
+  @Output() buttonClicked = new EventEmitter<{message: string, isChild: boolean, parentId: string | null | undefined}>();
 
 
   showButtons = false;
@@ -38,7 +38,7 @@ export class ChatComponent implements AfterViewInit {
 
   buttonClick(buttonName: string): void {
     console.log("Button clicked: " + buttonName);
-    this.buttonClicked.emit(buttonName);
+    this.buttonClicked.emit({message: buttonName, isChild: false, parentId: null});
     this.showButtons = false;
   }
 
