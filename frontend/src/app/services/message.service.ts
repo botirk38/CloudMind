@@ -50,7 +50,7 @@ export class MessageService {
   
     const parent = this.messageMap.get(parentId);
     if (parent) {
-      parent.children.push(id);
+      parent.children?.push(id);
     }
     this.messageMap.set(id, messageCard);
     this.messages.push(messageCard);

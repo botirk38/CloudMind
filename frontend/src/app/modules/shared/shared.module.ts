@@ -12,7 +12,6 @@ import { ScrollPanelModule } from 'primeng/scrollpanel';
 import { ToolbarComponent } from './toolbar/toolbar.component'
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
-import { ChildCardComponent } from './child-card/child-card.component';
 
 
 
@@ -23,7 +22,6 @@ import { ChildCardComponent } from './child-card/child-card.component';
     MessageBoxComponent,
     CardComponent,
     ToolbarComponent,
-    ChildCardComponent,
   ],
   imports: [
     CommonModule,

@@ -5,4 +5,8 @@
     height: 100vh;
   }
 
+  .mind-container > svg{
+    z-index: 1;
+  }
+
 
