@@ -6,6 +6,7 @@ export type MessageCard = {
     parentId: string | null;
     id: string;
     position: Coordinates;
+    children: string[];
 }
 
 export type Coordinates = {

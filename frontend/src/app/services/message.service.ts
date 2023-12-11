@@ -9,7 +9,7 @@ import { BehaviorSubject } from 'rxjs';
 export class MessageService {
   constructor(private layoutService: LayoutService) {}
 
-  messageMap: Map<string, MessageCard[]> = new Map();
+  messageMap: Map<string, MessageCard> = new Map();
   messages: MessageCard[] = [];
   averageMessageSize = { x: 400, y: 272 };
   activeMessageId = new BehaviorSubject<string | null>(null);
@@ -26,8 +26,9 @@ export class MessageService {
       id,
       position,
       parentId: null,
+      children: []
     };
-    this.messageMap.set(id, []);
+    this.messageMap.set(id, messageCard);
     this.messages.push(messageCard);
   }
 
@@ -44,9 +45,14 @@ export class MessageService {
       id,
       position,
       parentId,
+      children: [],
     };
-    const parentMessages = this.messageMap.get(parentId);
-    parentMessages?.push(messageCard);
+  
+    const parent = this.messageMap.get(parentId);
+    if (parent) {
+      parent.children.push(id);
+    }
+    this.messageMap.set(id, messageCard);
     this.messages.push(messageCard);
   }
 

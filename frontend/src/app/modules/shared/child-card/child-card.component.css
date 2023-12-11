@@ -1,0 +1,13 @@
+.right-button, .left-button{
+    position: absolute;
+    z-index: 100;
+    background-color: #4895ef;
+}
+
+.hidden{
+    display: none;
+}
+
+.right-button, .left-button > *{
+    color:white;
+}
