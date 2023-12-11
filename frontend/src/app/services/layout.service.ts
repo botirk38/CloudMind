@@ -20,7 +20,7 @@ export class LayoutService {
   messageLines: SVGPathElement[] | null = [];
   leftMessageLines: SVGPathElement[] | null = [];
   rightMessageLines: SVGPathElement[] | null = [];
-  MESSAGE_POSITION_INCREMENT = 200;
+  MESSAGE_POSITION_INCREMENT = 100;
 
   constructor(private domService: DOMService, private d3Service: D3Service) {}
 
