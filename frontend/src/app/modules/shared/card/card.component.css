@@ -1,0 +1,39 @@
+.card{
+    position: absolute;
+    transition: transform 0.5s ease-in-out;
+    cursor: pointer;
+    z-index: 50;
+
+}
+
+.active {
+    z-index: 100;
+    transform: scale(1.1);
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    border: 2px solid #007BFF;
+    background-color: #f8f9fa;
+}
+
+.top-button, .bottom-button{
+    position: absolute;
+    z-index: 100;
+    background-color: #4895ef;
+}
+
+.hidden{
+    display: none;
+}
+
+.top-button, .bottom-button > *{
+    color:white;
+}
+
+.top-button{
+    top: 20%;
+    left: 105%;
+}
+
+.bottom-button{
+    bottom: -50%;
+    left: 40%;
+}

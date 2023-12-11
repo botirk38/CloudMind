@@ -1,0 +1,15 @@
+<section class="_benefits">
+    <h2>Benefits of Using Our <span>Chat to PDF App</span></h2>
+    <div class="benefits_cards">
+        <div class="benefits_card" *ngFor = "let benefit of benefits">
+            <p-card [header]="benefit.header"  [subheader]="benefit.subheader">
+                <ng-template pTemplate="header">
+                    <img alt="Card" [src]="benefit.image" />
+                </ng-template>
+                <p>
+                    {{benefit.description}}
+                </p>
+            </p-card>
+        </div>
+    </div>
+  </section>
