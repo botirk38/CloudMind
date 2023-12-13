@@ -160,13 +160,13 @@ export class LayoutService {
       if (isLeftSide) {
         newPosition = {
           x: parentCard.position.x - horizontalOffset,
-          y: parentCard.position.y,
+          y: parentCard.position.y - 100,
         };
         this.cardsOnLeft.push(newPosition);
       } else {
         newPosition = {
           x: parentCard.position.x + horizontalOffset,
-          y: parentCard.position.y,
+          y: parentCard.position.y - 100,
         };
         this.cardsOnRight.push(newPosition);
       }
