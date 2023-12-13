@@ -27,27 +27,39 @@ export class LayoutService {
   // Stack to track message positions
   messageStack: Coordinates[] = [];
 
-  updateTextBoxPositionAndSize() {
-    console.log('Calling');
-    const textBox = document.getElementById('textBox');
-    if (textBox) {
-      const textBoxRect = this.domService.getElementRect('textBox')!;
-      this.textBoxPosition = {
-        x: textBoxRect.left + window.scrollX,
-        y: textBoxRect.top + window.scrollY,
-      };
-      this.textBoxSize = {
-        width: textBoxRect.width,
-        height: textBoxRect.height,
-      };
-      this.lastMessagePosition.x =
-        this.textBoxPosition.x + this.textBoxSize.width;
-      this.lastMessagePosition.y =
-        this.textBoxPosition.y + this.textBoxSize.height;
-    } else {
-      console.error('TextBox element not found');
-    }
+  updateTextBoxPositionAndSize(): void {
+      const textBoxRect = this.domService.getElementRect('textBox');
+      if (!textBoxRect) {
+        throw new Error('TextBox element not found');
+      }
+  
+      this.updateTextBoxPosition(textBoxRect);
+      this.updateTextBoxSize(textBoxRect);
+      this.updateLastMessagePosition();
+    } 
+  
+  
+  private updateTextBoxPosition(textBoxRect: DOMRect): void {
+    this.textBoxPosition = {
+      x: textBoxRect.left + window.scrollX,
+      y: textBoxRect.top + window.scrollY
+    };
   }
+  
+  private updateTextBoxSize(textBoxRect: DOMRect): void {
+    this.textBoxSize = {
+      width: textBoxRect.width,
+      height: textBoxRect.height
+    };
+  }
+  
+  private updateLastMessagePosition(): void {
+    this.lastMessagePosition = {
+      x: this.textBoxPosition.x + this.textBoxSize.width,
+      y: this.textBoxPosition.y + this.textBoxSize.height
+    };
+  }
+  
 
   getTextBoxPosition(): Coordinates {
     return this.textBoxPosition;
@@ -131,7 +143,7 @@ export class LayoutService {
   ): any {
     const parentCard = messageMap.get(parentId);
 
-    let newPosition;
+    let newPosition : Coordinates = { x: 0, y: 0 };
 
     if (!parentCard) {
       console.log('Parent card not found');
@@ -189,7 +201,21 @@ export class LayoutService {
     }
     }
 
+    
+
     console.log('New position:', newPosition);
+
+  const parentSize = { x: this.averageMessageSize.x, y: this.averageMessageSize.y};
+  const childSize = { x: this.averageMessageSize.x, y: this.averageMessageSize.y };
+
+
+    this.d3Service.drawLineToChild(
+      parentCard.position,
+      newPosition,
+      parentSize,
+      childSize,
+      buttonClicked
+    );
 
     return newPosition;
   }
