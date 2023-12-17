@@ -1,149 +1,47 @@
+//// Define the package for this class
 package chatpdf.service;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.InputStreamResource;
-import org.springframework.http.*;
+// Import necessary classes from the okhttp3, org.json, and org.springframework libraries
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+import org.json.JSONObject;
 import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.multipart.MultipartFile;
-
-import chatpdf.model.FileUploadResponse;
-import chatpdf.model.Message;
-import chatpdf.model.OpenAIChatRequest;
-import chatpdf.model.OpenAIChatResponse;
-import chatpdf.model.RetrieveFileContentResponse;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.web.client.RestClientException;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
+// Annotate this class as a Service to indicate it's a Spring component providing business functionalities
 @Service
 public class OpenAIService {
 
-    @Value("${openai.api.key}")
-    private String apiKey;
+    // OkHttpClient instance for sending HTTP requests; it's final as it doesn't need to change
+    private final OkHttpClient httpClient = new OkHttpClient();
+    private String key = "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";
 
-    @Value("${openai.apiFiles.url}")
-    private String apiFilesUrl;
+    // Method to call the OpenAI API, taking a prompt as input and returning a String
+    public String callOpenAI(String prompt) throws IOException {
+        // Create a new JSONObject to construct the request payload
+        JSONObject data = new JSONObject();
+        // Add the 'prompt' key with the user-provided prompt as the value
+        data.put("prompt", prompt);
+        // Add the 'max_tokens' key to limit the response length; here set to 150 tokens
+        data.put("max_tokens", 150);
 
-    @Value("${openai.apiChat.url}")
-    private String apiChatUrl;
+        // Create the request body with the JSON data and specify the content type as JSON
+        RequestBody body = RequestBody.create(data.toString(), okhttp3.MediaType.get("application/json; charset=utf-8"));
 
-    private final RestTemplate restTemplate;
-    private final Logger logger = LoggerFactory.getLogger(OpenAIService.class);
-    private final List<Message> messages = new ArrayList<>();
+        // Build the HTTP request to the OpenAI API
+        Request request = new Request.Builder()
+                .url("https://api.openai.com/v1/engines/davinci/completions") // Set the target URL
+                .header("Authorization", "Bearer " + key) // Add the authorization header using the API key from environment variables
+                .post(body) // Specify that this is a POST request and attach the request body
+                .build();
 
-
-    public OpenAIService(RestTemplate restTemplate) {
-        this.restTemplate = restTemplate;
-    }
-
-    public String uploadFile(MultipartFile file, String purpose) throws IOException {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-        headers.setBearerAuth(apiKey);
-
-        MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
-        body.add("file", new InputStreamResource(file.getInputStream()));
-        body.add("purpose", purpose);
-
-        HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
-        ResponseEntity<FileUploadResponse> response;
-
-        try {
-            response = restTemplate.exchange(apiFilesUrl, HttpMethod.POST, requestEntity, FileUploadResponse.class);
-            if (response == null) {
-                logger.error("Response from the server is null");
-                return "Error: No response from server";
-            }
-
-            FileUploadResponse fileUploadResponse = response.getBody();
-            if (fileUploadResponse == null) {
-                logger.error("Response body is null");
-                return new Error("Error: Response body is null").toString();
-            }
-            return fileUploadResponse.getFileId();
-        } catch (RestClientException e) {
-            logger.error("Error while uploading file: ", e);
-            throw new IOException("Error while uploading file: " + e.getMessage(), e);
+        // Execute the HTTP request and process the response
+        try (Response response = httpClient.newCall(request).execute()) {
+            // Return the response body as a string
+            return response.body().string();
         }
     }
-
-    public String retrieveFileContent(String fileId) throws IOException {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(apiKey);
-        headers.setContentType(MediaType.APPLICATION_JSON);
-
-        HttpEntity<String> requestEntity = new HttpEntity<>(headers);
-        ResponseEntity<RetrieveFileContentResponse> response;
-
-        String fileLocation = apiFilesUrl + "/" + fileId + "/content";
-
-        try{
-            response = restTemplate.exchange(fileLocation, HttpMethod.GET, requestEntity, RetrieveFileContentResponse.class);
-
-            if(response == null){
-                logger.error("Response from the server is null");
-                return new Error("Error: No response from server").toString();
-            }
-
-            RetrieveFileContentResponse retrieveFileContentResponse = response.getBody();
-            if(retrieveFileContentResponse == null){
-                logger.error("Response body is null");
-                return new Error("Error: Response body is null").toString();
-            }
-
-            return retrieveFileContentResponse.getFileContent();
-        }catch(RestClientException e){
-            logger.error("Error while retrieving file content: ", e);
-            throw new IOException("Error while retrieving file content: " + e.getMessage(), e);
-        }
-    }
-
-    public String getResponse(String fileContent, String model) throws IOException{
-        HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(apiKey);
-        headers.setContentType(MediaType.APPLICATION_JSON);
-
-       
-
-        OpenAIChatRequest openAIChatRequest = new OpenAIChatRequest(messages, model);
-
-        HttpEntity<OpenAIChatRequest> requestEntity = new HttpEntity<>(openAIChatRequest, headers);
-        ResponseEntity<OpenAIChatResponse> response;
-
-        String chatCompletionsUrl = apiChatUrl;
-
-        try{
-            response = restTemplate.exchange(chatCompletionsUrl, HttpMethod.POST, requestEntity, OpenAIChatResponse.class);
-
-            if(response == null){
-                logger.error("Response from the server is null");
-                return new Error("Error: No response from server").toString();
-            }
-
-            OpenAIChatResponse openAIChatResponse = response.getBody();
-
-            if(openAIChatResponse == null){
-                logger.error("Response body is null");
-                return new Error("Error: Response body is null").toString();
-            }
-
-            return openAIChatResponse.getChoices().get(0).getMessage().getContent();
-
-        }catch(RestClientException e){
-            logger.error("Error while retrieving file content: ", e);
-            throw new IOException("Error while retrieving file content: " + e.getMessage(), e);
-        }
-
-
-
-    }
-
 }
