@@ -171,7 +171,7 @@ export class LayoutService {
       // Place the child directly below the parent card
       if (isLeftSide) {
         newPosition = {
-          x: parentCard.position.x + horizontalOffset,
+          x: parentCard.position.x - horizontalOffset,
           y: parentCard.position.y,
         };
         this.cardsOnLeft.push(newPosition);
@@ -188,14 +188,14 @@ export class LayoutService {
     if (buttonClicked === 'top-button') {
       if(isLeftSide){
       newPosition = {
-        x: parentCard.position.x,
+        x: parentCard.position.x - horizontalOffset,
         y: parentCard.position.y - this.averageMessageSize.y - verticalOffset,
       };
       this.cardsOnLeft.push(newPosition);
     }else{
       newPosition = {
         x: parentCard.position.x + horizontalOffset,
-        y: parentCard.position.y,
+        y: parentCard.position.y - this.averageMessageSize.y - verticalOffset,
       };
       this.cardsOnRight.push(newPosition);
     }
