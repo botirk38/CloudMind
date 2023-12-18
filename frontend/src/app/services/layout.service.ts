@@ -32,34 +32,34 @@ export class LayoutService {
       if (!textBoxRect) {
         throw new Error('TextBox element not found');
       }
-  
+
       this.updateTextBoxPosition(textBoxRect);
       this.updateTextBoxSize(textBoxRect);
       this.updateLastMessagePosition();
-    } 
-  
-  
+    }
+
+
   private updateTextBoxPosition(textBoxRect: DOMRect): void {
     this.textBoxPosition = {
       x: textBoxRect.left + window.scrollX,
       y: textBoxRect.top + window.scrollY
     };
   }
-  
+
   private updateTextBoxSize(textBoxRect: DOMRect): void {
     this.textBoxSize = {
       width: textBoxRect.width,
       height: textBoxRect.height
     };
   }
-  
+
   private updateLastMessagePosition(): void {
     this.lastMessagePosition = {
       x: this.textBoxPosition.x + this.textBoxSize.width,
       y: this.textBoxPosition.y + this.textBoxSize.height
     };
   }
-  
+
 
   getTextBoxPosition(): Coordinates {
     return this.textBoxPosition;
@@ -166,12 +166,12 @@ export class LayoutService {
 
     // If the bottom-button is clicked
     if (
-      (buttonClicked === 'bottom-button' ) 
+      (buttonClicked === 'bottom-button' )
     ) {
       // Place the child directly below the parent card
       if (isLeftSide) {
         newPosition = {
-          x: parentCard.position.x - horizontalOffset,
+          x: parentCard.position.x,
           y: parentCard.position.y - 100,
         };
         this.cardsOnLeft.push(newPosition);
@@ -188,7 +188,7 @@ export class LayoutService {
     if (buttonClicked === 'top-button') {
       if(isLeftSide){
       newPosition = {
-        x: parentCard.position.x - horizontalOffset,
+        x: parentCard.position.x,
         y: parentCard.position.y - this.averageMessageSize.y - verticalOffset,
       };
       this.cardsOnLeft.push(newPosition);
@@ -201,7 +201,7 @@ export class LayoutService {
     }
     }
 
-    
+
 
     console.log('New position:', newPosition);
 
@@ -226,7 +226,7 @@ export class LayoutService {
     }
   }
 
-  
+
 
   // Method to reset message stack
   resetMessageStack(): void {
