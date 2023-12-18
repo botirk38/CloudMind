@@ -1,5 +1,5 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Message } from '../../demo/demo.component';
+import { AfterViewInit, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { LayoutService } from 'src/app/services/layout.service';
 
 
 
@@ -8,11 +8,41 @@ import { Message } from '../../demo/demo.component';
   templateUrl: './chat.component.html',
   styleUrls: ['./chat.component.css'],
 })
-export class ChatComponent {
+export class ChatComponent implements AfterViewInit {
 
   @Input() message: string | undefined;
+
   @Output() messageChange = new EventEmitter<string>();
-  @Input() messages: Message[] | undefined;
+  @Output() buttonClicked = new EventEmitter<{message: string, isChild: boolean, parentId: string | null | undefined}>();
+
+
+  showButtons = false;
+
+  constructor(private layoutService:LayoutService) { }
+
+  ngAfterViewInit(): void {
+    this.layoutService.updateTextBoxPositionAndSize();
+    console.log("Text Box Position:",this.layoutService.textBoxPosition);
+    console.log("Text Box size:",this.layoutService.textBoxSize);
+  }
+
+
+  sendMessage(): void {
+    if(this.message){
+      console.log("Message sent: " + this.message);
+      this.messageChange.emit(this.message);
+      this.message = '';
+      this.showButtons = true;
+    }
+  }
+
+  buttonClick(buttonName: string): void {
+    console.log("Button clicked: " + buttonName);
+    this.buttonClicked.emit({message: buttonName, isChild: false, parentId: null});
+    this.showButtons = false;
+  }
+
+
 }
 
 

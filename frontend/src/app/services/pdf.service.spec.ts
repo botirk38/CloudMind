@@ -1,107 +1,41 @@
 import { TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { PdfService } from './pdf.service';
-import * as pdfjsLib from 'pdfjs-dist';
-import { HttpTestingController, HttpClientTestingModule } from '@angular/common/http/testing';
-import { PdfwrapperService } from './pdfwrapper.service';
 
 describe('PdfService', () => {
   let service: PdfService;
-  let mockFileReader: jasmine.SpyObj<FileReader>;
-  let httpTestingController: HttpTestingController;
-  let pdfwrapperService: jasmine.SpyObj<PdfwrapperService>;
-
+  let httpMock: HttpTestingController;
 
   beforeEach(() => {
-    pdfwrapperService = jasmine.createSpyObj('PdfwrapperService', ['getDocument']);
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
-      providers: [PdfService,
-      { provide: PdfwrapperService, useValue: pdfwrapperService}
-      ]
+      providers: [PdfService]
     });
-    httpTestingController = TestBed.inject(HttpTestingController);
+
     service = TestBed.inject(PdfService);
-
-    mockFileReader = jasmine.createSpyObj('FileReader', ['readAsArrayBuffer', 'onload', 'onerror']);
-    spyOn(window as any, 'FileReader').and.returnValue(mockFileReader);
+    httpMock = TestBed.inject(HttpTestingController);
   });
 
-  it('should be created', () => {
-    expect(service).toBeTruthy();
+  afterEach(() => {
+    httpMock.verify(); // Ensure that there are no outstanding requests
   });
 
-  afterEach(  () => { 
-    httpTestingController.verify();
-  });
+  it('should send the PDF to the backend', () => {
+    const mockFile = new File([''], 'filename', { type: 'application/pdf' });
+    const mockResponse = { status: 'success' };
 
-  it('should extract content from pdf', (done: DoneFn) => {
-    const testFile = new File([""], "test.pdf", { type: "application/pdf" });
-    const mockText = "Extracted PDF text";
-    const mockPdf: Partial<pdfjsLib.PDFDocumentProxy> = {
-      numPages: 1,
-      getPage: jasmine.createSpy().and.returnValue(Promise.resolve({
-        getTextContent: () => Promise.resolve({
-          items: [{ str: mockText }],
-        }),
-      })),
-
-    }
-
-      pdfwrapperService.getDocument.and.returnValue({ 
-      promise: Promise.resolve(mockPdf), 
-      
-    } as unknown as pdfjsLib.PDFDocumentLoadingTask );
-
-    service.extractPdfContent(testFile).subscribe({
-      next: text => {
-        expect(text).toBe(mockText);
-        done();
-      },
-      error: done.fail
+    service.sendPdfToBackend(mockFile).subscribe(response => {
+      expect(response).toEqual(mockResponse);
     });
 
-    if (mockFileReader.onload) {
-      mockFileReader.onload({ target: { result: new ArrayBuffer(8) } } as any);
-    }
-    
+    const req = httpMock.expectOne(service.getBackendUrl());
+    expect(req.request.method).toBe('POST');
+
+    const formData = new FormData();
+    formData.append('file', mockFile);
+
+    expect(req.request.body).toEqual(formData);
+
+    req.flush(mockResponse); // Provide dummy values as a response
   });
-
-  it('should handle file read errors', (done: DoneFn) => {
-    const testFile = new File([""], "test.pdf", { type: "application/pdf" });
-    const readError = new ProgressEvent('error');
-
-    service.extractPdfContent(testFile).subscribe({
-      next: () => done.fail('Should have failed with file read error'),
-      error: error => {
-        expect(error).toBe(readError);
-        done();
-      }
-    });
-
-    if(mockFileReader.onerror) {
-      mockFileReader.onerror(readError as ProgressEvent<FileReader>);
-    }
-  });
-
-  it('should handle PDF.js errors', (done: DoneFn) => {
-    const testFile = new File([""], "test.pdf", { type: "application/pdf" });
-    const pdfjsError = new Error('PDF.js error');
-
-    pdfwrapperService.getDocument.and.returnValue({ 
-      promise: Promise.reject(pdfjsError), 
-
-    } as unknown as pdfjsLib.PDFDocumentLoadingTask )
-
-    service.extractPdfContent(testFile).subscribe({
-      next: () => done.fail('Should have failed with PDF.js error'),
-      error: error => {
-        expect(error).toBe(pdfjsError);
-        done();
-      }
-    });
-    if(mockFileReader.onload) {
-      mockFileReader.onload({ target: { result: new ArrayBuffer(8) } } as any);
-    }
-  });
-
 });

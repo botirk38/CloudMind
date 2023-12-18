@@ -8,7 +8,10 @@ import { MessageBoxComponent } from './message-box/message-box.component';
 import { CardModule } from 'primeng/card';
 import { CardComponent } from './card/card.component';
 import { ButtonModule } from 'primeng/button';
-
+import { ScrollPanelModule } from 'primeng/scrollpanel';
+import { ToolbarComponent } from './toolbar/toolbar.component'
+import {MatButtonModule} from '@angular/material/button';
+import {MatIconModule} from '@angular/material/icon';
 
 
 
@@ -17,18 +20,24 @@ import { ButtonModule } from 'primeng/button';
     VideoComponent,
     ChatComponent,
     MessageBoxComponent,
-    CardComponent
+    CardComponent,
+    ToolbarComponent,
   ],
   imports: [
     CommonModule,
     FormsModule,
     InputTextModule,
     CardModule,
-    ButtonModule
+    ButtonModule,
+    ScrollPanelModule,
+    MatButtonModule,
+    MatIconModule
+
   ],
   exports: [
     VideoComponent,
-    ChatComponent
+    ChatComponent,
+    CardComponent
 
   ]
 })

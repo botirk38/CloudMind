@@ -1,8 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { PdfService } from 'src/app/services/pdf.service';
-import Typed from 'typed.js';
-
+import { MessageService } from 'src/app/services/message.service';
+import { MessageCard } from 'src/app/models/MessageCard';
+import { D3Service } from 'src/app/services/d3.service';
 
 export interface Message {
   text: string;
@@ -16,26 +17,18 @@ export interface Message {
   styleUrls: ['./demo.component.css']
 })
 export class DemoComponent implements OnInit {
-  message : string | undefined;
   messages: Message[] | undefined;
   samplePDF = '/assets/sample.pdf';
 
-  constructor(private pdfService: PdfService, private http: HttpClient) {}
-  initializeTyped(): void {
-    const options = {
-      strings: ["ChatPDF", "Crafted with Cutting-Edge AI"],
-      loop: true,
-      typeSpeed: 50,
-      backSpeed: 25
-    };
-
-    new Typed('.multiText', options);
-  }
+  constructor(private pdfService: PdfService, private http: HttpClient, public messageService: MessageService) {}
+ 
 
   ngOnInit(): void {
-    this.initializeTyped();
     this.messages = [];
-    this.message = '';
+    this.initializeSamplePdf(); 
+  }
+
+  initializeSamplePdf(): void {
     this.http.get(this.samplePDF, { responseType: 'blob' }).subscribe(blob => {
       const file = new File([blob], 'sample.pdf', { type: 'application/pdf' });
       this.pdfService.sendPdfToBackend(file).subscribe({
@@ -48,6 +41,17 @@ export class DemoComponent implements OnInit {
       });
     });
   }
-        
+
+  onMessageCardClicked(messageCard: MessageCard) {
+    this.messageService.activeMessageId.next(messageCard.id);
+  }
+
+  onMessageCardUnSelected() {
+    this.messageService.activeMessageId.next(null);
+
+  }
+
+  
+
 
 }

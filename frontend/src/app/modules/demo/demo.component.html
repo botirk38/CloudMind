@@ -1,12 +1,6 @@
-<main>
-  <!-- <div class="chatbox">
-      <div class="messages" *ngFor="let message of messages">
-        <p><strong>{{ message.sender }}</strong>: {{ message.text }}</p>
-      </div> -->
- 
-      <app-chat></app-chat>
+<section id="zoomContainer" class="mind-container">
+      <svg id="mindMapSvg" style="position: absolute; top: 0px; left: 0px; z-index: 10;"></svg>
+      <app-chat (buttonClicked)="messageService.onMessageReceived($event)"></app-chat>
+      <app-card (buttonClicked)="messageService.onMessageReceived($event)" (messageCardUnSelected)="onMessageCardUnSelected()" (messageCardClicked)="onMessageCardClicked($event)" *ngFor="let messageCard of messageService.messages" [messageCard]="messageCard"></app-card>
 
-
-  
-
-</main>
+</section>

@@ -1,18 +1,20 @@
 <section>
-    <!--
-        <ul class="message-list">
-            <li *ngFor = "let message of messages">
-                <p>{{message.text}}</p>
-                <p>you</p>
-            </li>
-        </ul>
-    -->
 
-    <div class="input-box">
-        <span class="p-float-label">
-          <input pInputText id="message" [(ngModel)]="message" (ngModelChange)="messageChange.emit($event)" />
-          <label htmlFor="message">Enter a message</label>
-        </span>
-      </div>
+    <div class="text-box-container">
+        <button mat-mini-fab class="left-button" [class.hidden]="!showButtons" (click)="buttonClick('left-button')">
+            <mat-icon>add</mat-icon>
+        </button>
+
+        <button mat-mini-fab class="right-button" [class.hidden]="!showButtons" (click)="buttonClick('right-button')">
+            <mat-icon>add</mat-icon>
+        </button>
+
+        <div class="input-box" >
+            <span class="p-input-icon-left">
+                <i class="pi pi-search" (click)="sendMessage()"></i>
+                <input  id="textBox" type="text" pInputText [(ngModel)]="message"  (keyup.enter)="sendMessage()"/>
+            </span>
+        </div>
+    </div>
 
 </section>
