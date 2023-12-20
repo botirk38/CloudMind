@@ -20,6 +20,7 @@
     "@angular/platform-browser": "^16.2.0",
     "@angular/platform-browser-dynamic": "^16.2.0",
     "@angular/router": "^16.2.0",
+    "@swimlane/ngx-graph": "^8.0.2",
     "pdfjs-dist": "^3.11.174",
     "primeicons": "^6.0.1",
     "primeng": "^16.9.1",
@@ -29,7 +30,7 @@
     "zone.js": "~0.13.0"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^16.2.8",
+    "@angular-devkit/build-angular": "^17.0.7",
     "@angular/cli": "^16.2.8",
     "@angular/compiler-cli": "^16.2.0",
     "@types/d3": "^7.4.3",

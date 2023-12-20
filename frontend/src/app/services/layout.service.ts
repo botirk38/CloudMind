@@ -9,8 +9,23 @@ import { MessageService } from './message.service';
   providedIn: 'root',
 })
 export class LayoutService {
+  calculateInitialPositionParent() {
+    throw new Error('Method not implemented.');
+  }
+  calculateQuadrantStartPosition(calculateQuadrantStartPosition: any) {
+    throw new Error('Method not implemented.');
+  }
+  isWithinBounds(isWithinBounds: any) {
+    throw new Error('Method not implemented.');
+  }
+  getAvailablePositions(getAvailablePositions: any) {
+    throw new Error('Method not implemented.');
+  }
+  selectPosition(selectPosition: any) {
+    throw new Error('Method not implemented.');
+  }
   averageMessageSize = { x: 320, y: 128 };
-  textBoxPosition = { x: 0, y: 0 };
+  textBoxPosition = { x: 20000, y: 200000 };
   textBoxSize = { width: 0, height: 0 };
   lastMessagePosition: Coordinates = { x: 570, y: 625 };
   lastMessagePositionLeft: Coordinates = { x: 100, y: 290 };
