@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "@swimlane/ngx-graph": "^8.0.2"
+  }
+}
