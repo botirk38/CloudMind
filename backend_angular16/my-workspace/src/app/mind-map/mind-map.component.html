@@ -1,0 +1,56 @@
+<p>mind-map works!</p>
+<!-- mind-map.component.html -->
+<ngx-graph
+  class="chart-container"
+  [view]="[10000, 10000]"
+  [showMiniMap]="true"
+  [links]="[
+    {
+      id: 'a',
+      source: 'first',
+    target: 'second',
+      label: 'is parent of'
+    }, {
+      id: 'b',
+      source: 'first',
+      target: 'third',
+      label: 'custom label'
+    }
+  ]"
+  [nodes]="[
+    {
+      id: 'first',
+      label: 'A'
+    }, {
+      id: 'second',
+      label: 'B'
+    }, {
+      id: 'third',
+      label: 'C'
+    }
+  ]"
+>
+<ng-template #nodeTemplate let-node>
+    <svg:g class="node">
+      <svg:rect
+        [attr.width]="node.dimension.width"
+        [attr.height]="node.dimension.height"
+        [attr.fill]="node.data.color"
+        [attr.stroke]="'#000000'"  
+        [attr.stroke-width]="'2'"  
+        [attr.rx]="'0'"            
+      />
+      <svg:text
+        class="node-label"
+        [attr.x]="node.dimension.width / 2"
+        [attr.y]="node.dimension.height / 2"
+        text-anchor="middle"
+        alignment-baseline="middle"
+        [style.font-size]="'12px'"
+        [style.fill]="'#000000'"
+      >
+        {{ node.label }}
+      </svg:text>
+    </svg:g>
+  </ng-template>
+</ngx-graph>
